@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tar Heel Science Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a field notebook. Graph-paper lab panels for anything with numbers, plain pages for reading. */
+:root{
+  --paper:#f5f8f3; --card:#ffffff; --ink:#15241d; --ink-2:#4a5c53; --line:#d5e0d8; --grid:#e3ece6;
+  --pine:#1d5a42; --pine-soft:#e1efe7; --sky:#2f7fb8; --sky-soft:#e3f0fa; --sun:#b97c0e; --sun-soft:#fbf0d6;
+  --good:#1e7a46; --good-soft:#dcf2e4; --bad:#b23a2a; --bad-soft:#fbe3df;
+  --s1:#2f7fb8; --s2:#c4860f; --s3:#1d7a52; --s4:#8a4fb3;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0e1613; --card:#16211c; --ink:#e3ece6; --ink-2:#a3b5ab; --line:#2b3b33; --grid:#1d2a24;
+  --pine:#6fcf9f; --pine-soft:#1b3328; --sky:#7cbcea; --sky-soft:#16283a; --sun:#f0c060; --sun-soft:#3a2f14;
+  --good:#6fd99a; --good-soft:#173525; --bad:#ff9a88; --bad-soft:#3d1d18;
+  --s1:#7cbcea; --s2:#f0c060; --s3:#6fcf9f; --s4:#c89be8; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0e1613; --card:#16211c; --ink:#e3ece6; --ink-2:#a3b5ab; --line:#2b3b33; --grid:#1d2a24;
+  --pine:#6fcf9f; --pine-soft:#1b3328; --sky:#7cbcea; --sky-soft:#16283a; --sun:#f0c060; --sun-soft:#3a2f14;
+  --good:#6fd99a; --good-soft:#173525; --bad:#ff9a88; --bad-soft:#3d1d18;
+  --s1:#7cbcea; --s2:#f0c060; --s3:#6fcf9f; --s4:#c89be8; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+a{color:var(--sky)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.muted{color:var(--ink-2)}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* top bar */
+.top{z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);margin-right:auto}
+@media (min-width:700px){.top{position:sticky;top:env(safe-area-inset-top,0px)}}
+.brand b{font-family:var(--display);font-weight:800;font-size:1.15rem}
+.brand svg{flex:none}
+.navbtn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:.92rem;text-decoration:none;color:var(--ink)}
+.navbtn[aria-current="page"]{background:var(--pine);border-color:var(--pine);color:var(--paper)}
+.stars-total{font-family:var(--mono);font-size:.9rem;color:var(--ink-2)}
+
+main{padding-block:28px 64px}
+.stack{display:grid;gap:28px}
+
+/* home */
+.hero{display:grid;gap:14px;max-width:62ch}
+.hero p{font-size:1.08rem}
+.strands{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.strand{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px;align-content:start}
+.strand header{display:grid;gap:4px}
+.strand .code{font-family:var(--mono);font-size:.8rem;color:var(--pine)}
+.objlist{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.objlink{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:8px;border:1px solid transparent}
+.objlink:hover{background:var(--pine-soft);border-color:var(--line)}
+.objlink .id{font-family:var(--mono);font-size:.82rem;color:var(--pine);padding-top:2px;white-space:nowrap}
+.objlink .t{font-size:.95rem;min-width:0}
+.mathtag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;background:var(--sun-soft);color:var(--sun);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.stars{font-size:.85rem;letter-spacing:1px;white-space:nowrap;color:var(--line)}
+.stars .on{color:var(--sun)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.92rem;color:var(--ink-2)}
+
+/* objective page */
+.crumbs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:.92rem}
+.crumbs a{text-decoration:none}
+.objhead{display:grid;gap:10px}
+.objhead .official{font-size:.95rem;color:var(--ink-2);max-width:70ch}
+.ican{background:var(--pine);color:var(--paper);border-radius:var(--r);padding:16px 18px;font-size:1.1rem;max-width:70ch}
+.ican b{font-family:var(--display)}
+.secnav{display:flex;gap:8px;flex-wrap:wrap}
+.secnav a{font-size:.88rem;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--ink);background:var(--card)}
+section.block{display:grid;gap:14px}
+section.block > header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.twocol{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px}
+@media (max-width:760px){.twocol{grid-template-columns:1fr}}
+.prose{display:grid;gap:12px;max-width:66ch}
+ul.keys{margin:0;padding-left:1.2em;display:grid;gap:6px}
+
+/* reading cards */
+.reads{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.read{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:8px;align-content:start}
+.read .kind{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sky)}
+.read h3 a{color:var(--ink);text-decoration-color:var(--sky);text-underline-offset:3px}
+.read .src{font-size:.85rem;color:var(--ink-2)}
+.read .find{font-size:.88rem;background:var(--sky-soft);border-radius:6px;padding:6px 8px}
+.read .purpose{font-size:.92rem;border-left:3px solid var(--sun);padding-left:10px}
+.read .done{font-size:.82rem;color:var(--good)}
+
+/* math */
+.math{background:var(--sun-soft);border-radius:var(--r);padding:18px;display:grid;gap:12px}
+.math .mods{display:grid;gap:6px;list-style:none;margin:0;padding:0}
+.math .mods li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.badge{font-family:var(--mono);font-size:.75rem;background:var(--sun);color:var(--card);border-radius:4px;padding:2px 7px;white-space:nowrap}
+.nc{font-family:var(--mono);font-size:.82rem}
+.example{background:var(--card);border-radius:8px;padding:12px 14px;border:1px dashed var(--sun)}
+
+/* lab panel = graph paper */
+.lab{border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:14px;
+  background-color:var(--card);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px}
+.lab > header{display:grid;gap:4px}
+.lab .tag{font-family:var(--mono);font-size:.75rem;color:var(--pine);letter-spacing:.06em;text-transform:uppercase}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:1.5px solid var(--pine);background:var(--card);color:var(--pine);border-radius:8px;padding:7px 14px;font-weight:700;font-size:.95rem}
+.btn:hover{background:var(--pine-soft)}
+.btn.primary{background:var(--pine);color:var(--paper)}
+.btn.sel{background:var(--pine);color:var(--paper)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input[type=text],input[type=number],select{font:inherit;font-family:var(--mono);background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+input[type=text],input[type=number]{width:7.5em}
+input[type=range]{accent-color:var(--pine);width:100%}
+.fb{font-size:.95rem;border-radius:6px;padding:8px 10px}
+.fb.ok{background:var(--good-soft);color:var(--good)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.fb.info{background:var(--sky-soft);color:var(--ink)}
+.chart{width:100%;height:auto;display:block}
+.chartwrap{overflow-x:auto}
+.chartwrap > .chart{min-width:520px}
+.objtitle{font-size:clamp(1.5rem,3.6vw,2.2rem);max-width:30ch}
+.chart text{font-family:var(--mono);font-size:12px;fill:var(--ink-2)}
+.chart .axis{stroke:var(--ink-2);stroke-width:1.2}
+.chart .gl{stroke:var(--line);stroke-width:1}
+table.data{border-collapse:collapse;font-family:var(--mono);font-size:.88rem;font-variant-numeric:tabular-nums}
+table.data th,table.data td{border:1px solid var(--line);padding:4px 10px;text-align:right}
+table.data th{background:var(--pine-soft);text-align:center;font-weight:500}
+table.data td:first-child,table.data th:first-child{text-align:left}
+.tablewrap{overflow-x:auto}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+
+/* sort / order / match */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.sortcard{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:8px}
+.sortcard.ok{border-color:var(--good);background:var(--good-soft)}
+.sortcard.no{border-color:var(--bad);background:var(--bad-soft)}
+.sortcard .opts{display:flex;gap:6px;flex-wrap:wrap}
+.sortcard .opts .btn{padding:4px 10px;font-size:.85rem}
+.chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:46px;padding:8px;border:2px dashed var(--line);border-radius:8px;background:var(--card)}
+.chain .link{font-weight:700;background:var(--pine-soft);border-radius:6px;padding:6px 10px}
+.chain .arrow{color:var(--ink-2);font-family:var(--mono)}
+
+/* words */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.word{min-height:96px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);padding:12px;text-align:left;display:grid;align-content:center;gap:4px}
+.word b{font-family:var(--display);font-size:1.08rem}
+.word span{font-size:.92rem;color:var(--ink-2)}
+.word[aria-pressed="true"]{border-color:var(--sky);background:var(--sky-soft)}
+
+/* stems */
+.stems{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.stems li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.blank{display:inline-block;min-width:5em;border-bottom:2px solid var(--ink-2);margin:0 2px}
+
+/* quiz */
+.quiz{display:grid;gap:16px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:10px}
+.q .opts{display:grid;gap:8px}
+.q .opt{text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:8px;padding:9px 12px}
+.q .opt:hover{border-color:var(--sky)}
+.q .opt.ok{border-color:var(--good);background:var(--good-soft)}
+.q .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+
+/* teacher */
+.tt{border-collapse:collapse;font-size:.9rem;min-width:820px}
+.tt th,.tt td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.tt th{font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.tt td:first-child{font-family:var(--mono);white-space:nowrap;color:var(--pine)}
+.note{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;max-width:75ch;display:grid;gap:8px;font-size:.95rem}
+
+/* scale */
+.scale{display:grid;justify-items:center;gap:4px}
+.scale .readout{font-family:var(--mono);font-size:1.6rem;background:var(--ink);color:var(--paper);padding:4px 14px;border-radius:6px;min-width:7.5em;text-align:center;font-variant-numeric:tabular-nums}
+canvas{max-width:100%;display:block;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Tar Heel Science Lab home">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="8" style="fill:var(--pine)"/><path d="M12 7h10M14 7v8l-6 11a2 2 0 0 0 2 3h14a2 2 0 0 0 2-3l-6-11V7" style="fill:none;stroke:var(--paper);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/><path d="M11 22h12" style="stroke:var(--sun);stroke-width:2.2;stroke-linecap:round"/></svg>
+      <span><b>Tar Heel Science Lab</b><br><span class="eyebrow">Grade 5 · NC 2023 Standards</span></span>
+    </a>
+    <span class="stars-total" id="starTotal"></span>
+    <a class="navbtn" href="#home" id="navHome">Strands</a>
+    <a class="navbtn" href="#teacher" id="navTeacher">Teacher guide</a>
+  </div>
+</div>
+<main class="wrap" id="app"></main>
+
+<script>
+/* ---------- storage (per-browser convenience only) ---------- */
+const KEY = "thsl-progress-v1";
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { progress = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch (e) {} }
+function mark(id, what){ progress[id] = progress[id] || {}; if(!progress[id][what]){ progress[id][what] = true; save(); updateStarTotal(); refreshStars(id); } }
+function starsFor(id){ const p = progress[id] || {}; return [!!p.read, !!p.lab, !!p.quiz]; }
+
+/* ---------- Eureka Math² references ---------- */
+const EM = {
+  M1:"Module 1 · Place Value Concepts for Multiplication and Division with Whole Numbers",
+  M2:"Module 2 · Addition and Subtraction with Fractions",
+  M3:"Module 3 · Multiplication and Division with Fractions",
+  M4:"Module 4 · Place Value Concepts for Decimal Operations",
+  M5:"Module 5 · Addition and Multiplication with Area and Volume",
+  M6:"Module 6 · Foundations in Geometry in the Coordinate Plane"
+};
+const EM_URL = "https://greatminds.org/math/eurekamath2";
+
+/* ---------- Strands & objectives (from NC DPI Grade 5 Support Document, Aug 2025) ---------- */
+const STRANDS = [
+  {id:"matter", code:"PS.5.1", name:"Matter and Its Interactions", std:"Understand the interactions of matter and energy and the changes that occur."},
+  {id:"forces", code:"PS.5.2", name:"Motion and Stability: Forces and Interactions", std:"Understand force, motion, and the relationship between them."},
+  {id:"body", code:"LS.5.1", name:"From Molecules to Organisms", std:"Understand how structures and systems of the human body perform functions necessary for life."},
+  {id:"eco", code:"LS.5.2", name:"Ecosystems: Interactions, Energy, and Dynamics", std:"Understand the interdependence of plants and animals within their ecosystem."},
+  {id:"heredity", code:"LS.5.3", name:"Heredity: Inheritance and Variation of Traits", std:"Understand some characteristics of an organism are inherited and other characteristics are acquired."},
+  {id:"earth", code:"ESS.5.1", name:"Earth's Systems", std:"Understand how Earth systems (hydrosphere and atmosphere) impact patterns of weather and climate."}
+];
+
+const OBJ = [
+/* ===== PS.5.1 ===== */
+{id:"PS.5.1.1", strand:"matter",
+ official:"Carry out investigations to compare the weight of objects before and after an interaction.",
+ ican:"I can measure and compare weight before and after something changes, and use the numbers to show that matter is conserved.",
+ sep:"Plan and Carry Out Investigations", ccc:"Cause and Effect; Energy and Matter",
+ big:"When you tear, cut, mix, dissolve, melt or rearrange something in a closed system, the total weight stays the same. Matter does not disappear. Sugar stirred into tea seems to vanish, but the scale proves it is still there.",
+ keys:["The weight of an object equals the weight of all its parts added together.","In a closed system, weight before an interaction = weight after.","If the weight drops, something left the system (like water vapor or a gas escaping an open cup).","Use the right tool (a balance or scale), measure carefully, and do more than one trial."],
+ words:[["conservation","Keeping the same total amount. Matter is conserved."],["interaction","When things act on each other, like mixing or heating."],["closed system","Nothing can get in or out, like a sealed jar."],["dissolve","When a solid spreads out in a liquid so you can't see it."],["evidence","Data or observations that support an idea."],["vanish","To seem to disappear."],["property","A trait you can observe or measure, like color or weight."],["substance","A kind of matter with its own properties."]],
+ stems:["What evidence is there that matter is conserved in this system?","In a closed system, the weight of an object before and after an interaction ___.","When matter seems to vanish, the weight ___ because ___.","If you dissolved 10 g of sugar into 411 g of tea, the drink would weigh ___ because ___."],
+ reads:[
+  {kind:"Interactive", title:"States of Matter: Basics", src:"PhET Interactive Simulations, Univ. of Colorado", url:"https://phet.colorado.edu/en/simulations/states-of-matter-basics", find:"Open the simulation and heat, then cool, the water.", purpose:"While you watch the particles, do any of them disappear? What does that tell you about weight?"},
+  {kind:"Article", title:"Wonderopolis: matter and mixtures", src:"National Center for Families Learning", url:"https://www.wonderopolis.org/", find:"Search: where does sugar go when it dissolves", purpose:"Write one sentence that explains where dissolved sugar goes, using the word evidence."},
+  {kind:"Book", title:"What's the Matter in Mr. Whiskers' Room?", src:"Michael Elsohn Ross · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title, or browse NSTA's Outstanding Science Trade Books list.", purpose:"Pick one investigation from the book. What would you weigh before and after?"}
+ ],
+ math:{mods:["M4","M1"], nc:["NC.5.NBT.7 add and subtract decimals to hundredths","NC.5.MD.1 convert measurements within the metric system"],
+  why:"Conservation of mass is an addition problem: the parts add up to the whole. Weights are often decimals (12.5 g) or need converting (1.2 kg = 1,200 g).",
+  example:"Before: tea 411 g + sugar 10 g = <b>421 g</b>. After stirring: the scale reads <b>421 g</b>. Same weight, so the matter was conserved."},
+ labs:["mass"],
+ quiz:[
+  {q:"A sealed jar with an ice cube weighs 352.5 g. After the ice melts, what will the jar weigh?", o:["Less than 352.5 g","Exactly 352.5 g","More than 352.5 g"], a:1, why:"The jar is a closed system. Melting changes the form of the water, not the amount of matter."},
+  {q:"A sheet of paper weighs 4.8 g. You tear it into 20 pieces and weigh all the pieces together. What do you get?", o:["4.8 g","Less, because pieces are smaller","20 × 4.8 g"], a:0, why:"The whole equals the sum of its parts."},
+  {q:"An open cup of water weighs 250 g on Monday and 212 g on Friday. What is the best explanation?", o:["Matter was destroyed","The scale broke","Water evaporated and left the open cup as water vapor"], a:2, why:"The cup is not a closed system. The water became vapor in the air, so 38 g of matter left the cup. It still exists."}
+ ]},
+{id:"PS.5.1.2", strand:"matter",
+ official:"Carry out investigations to explain whether the mixing of two or more substances results in new substances.",
+ ican:"I can look for evidence (color change, odor, bubbles, temperature change) to decide whether mixing made a new substance.",
+ sep:"Plan and Carry Out Investigations", ccc:"Cause and Effect; Systems and System Models",
+ big:"Some changes only change shape or state, like dissolving sugar or crushing a can. Other changes make a brand-new substance with different properties, like rust on a nail or bubbles from baking soda and vinegar. Either way, the total weight does not change.",
+ keys:["Physical change: same substance, new shape or state (melting, dissolving, crushing).","New substance: properties change. Look for color change, new odor, gas bubbles, or temperature change.","Record observations in a before-and-after chart.","No matter what change happens, the total weight of the substances stays the same."],
+ words:[["physical change","A change in size, shape or state. No new substance forms."],["chemical change","A change that makes a new substance with new properties."],["properties","Traits like color, smell, texture, weight."],["qualitative data","Data you describe in words (it turned blue)."],["quantitative data","Data you measure with numbers (it weighs 12 g)."],["variable","A factor that can change in an experiment."],["control","The part of a test you keep the same to compare."],["mass","The amount of matter in an object."]],
+ stems:["How do you know that ___ causes the formation of a new substance?","Is the evidence sufficient to conclude that mixing caused a new substance to form? If not, what more evidence is needed?","What are the quantitative and qualitative properties of ___?","What is the result of combining the two substances?"],
+ reads:[
+  {kind:"Article", title:"Science News Explores", src:"Society for Science", url:"https://www.snexplores.org/", find:"Search: chemical reaction OR rust", purpose:"List two clues the article gives that a new substance formed."},
+  {kind:"Video & lessons", title:"PBS LearningMedia", src:"PBS / WUNC partner content", url:"https://www.pbslearningmedia.org/", find:"Search: physical and chemical changes grade 5", purpose:"Fill in a T-chart: Physical change | New substance. Add three examples to each side."},
+  {kind:"Book", title:"Change It! Solids, Liquids, Gases and You", src:"Adrienne Mason · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Which change in the book could be undone? Which could not?"}
+ ],
+ math:{mods:["M4"], nc:["NC.5.NBT.7 add and subtract decimals"],
+  why:"To prove weight stays the same, add the weights of the ingredients and compare with the weight after mixing.",
+  example:"Baking soda 15.25 g + vinegar 171.15 g in a sealed bag = <b>186.40 g</b>. After fizzing, the sealed bag still reads 186.40 g."},
+ labs:["newsub"],
+ quiz:[
+  {q:"Which observation is the best evidence that a NEW substance formed?", o:["The sugar disappeared in the water","Bubbles of gas formed and a balloon filled up","The can got smaller when crushed"], a:1, why:"Formation of a gas is a clue that a new substance formed."},
+  {q:"Which change does NOT make a new substance?", o:["A nail rusting","Bread burning","Ice melting"], a:2, why:"Melting is a change of state. It is still water."},
+  {q:"'The mixture weighs 186.4 g' is what kind of data?", o:["Quantitative","Qualitative"], a:0, why:"It is measured with a number."}
+ ]},
+{id:"PS.5.1.3", strand:"matter",
+ official:"Carry out investigations to compare how heating and cooling affect some materials and how this relates to their purpose and practical applications.",
+ ican:"I can use temperature data to compare conductors and insulators, and explain why we choose certain materials for certain jobs.",
+ sep:"Plan and Carry Out Investigations; Constructing Explanations", ccc:"Cause and Effect; Energy and Matter",
+ big:"Heating and cooling change materials, but not all materials respond the same way. Metals are conductors and move heat quickly. Foam, wood and cloth are insulators and slow heat down. That's why pots are metal and pot handles are wood or silicone.",
+ keys:["Heating and cooling can cause changes in state, expansion and contraction.","Conductors (like copper and other metals) let heat move through them quickly.","Insulators (like foam, wood, silicone) slow heat transfer.","Many changes happen faster at higher temperatures.","Builders leave gaps in sidewalks so concrete can expand and contract."],
+ words:[["conductor","A material that heat moves through easily."],["insulator","A material that slows down heat transfer."],["expand","Get bigger, often when heated."],["contract","Get smaller, often when cooled."],["practical application","A real-world use."],["material","What something is made of."],["temperature","How hot or cold something is."],["design","A plan to solve a problem."]],
+ stems:["How can you keep items cool when bringing a cold lunch to school?","I chose to use ___ to create my ___ because ___.","Based on our experiment, the best insulators are ___ and the best conductors are ___.","Why are most cooking pots made of metal rather than glass?"],
+ reads:[
+  {kind:"Article", title:"Wonderopolis", src:"National Center for Families Learning", url:"https://www.wonderopolis.org/", find:"Search: why does metal feel cold", purpose:"Explain in your own words why a metal spoon feels colder than a wooden one at the same temperature."},
+  {kind:"Interactive", title:"Energy Forms and Changes", src:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/energy-forms-and-changes", find:"Use the Intro screen: heat iron and brick blocks.", purpose:"Which block warmed the water faster? Is it a better conductor or insulator?"},
+  {kind:"Article", title:"Science News Explores", src:"Society for Science", url:"https://www.snexplores.org/", find:"Search: insulation", purpose:"Find one way engineers use insulators in homes or clothing."}
+ ],
+ math:{mods:["M6","M4"], nc:["NC.5.G.1 graph points in the first quadrant","NC.5.NBT.7 subtract decimals"],
+  why:"A temperature-over-time line graph shows which cup lost heat fastest. Subtracting start and end temperatures tells you exactly how much each cup cooled.",
+  example:"Foam cup: 80 °C → 66 °C. 80 − 66 = <b>14 degrees</b>. Metal cup: 80 °C → 34 °C. 80 − 34 = <b>46 degrees</b>. Foam is the better insulator."},
+ labs:["cooling"],
+ quiz:[
+  {q:"Why do builders leave spaces between sidewalk blocks?", o:["To save concrete","So the material can expand and contract","So water can't drain"], a:1, why:"Concrete expands in heat and contracts in cold."},
+  {q:"Which is the best choice for a pot handle?", o:["Copper","Aluminum","Wood or silicone"], a:2, why:"Wood and silicone are insulators, so your hand stays safe."},
+  {q:"How can you loosen a stuck metal jar lid?", o:["Put it in the freezer","Run it under hot water so it expands","Shake it"], a:1, why:"Heating makes the metal lid expand a little."}
+ ]},
+/* ===== PS.5.2 ===== */
+{id:"PS.5.2.1", strand:"forces",
+ official:"Carry out investigations to explain how factors such as gravity, friction, and change in mass affect the motion of objects.",
+ ican:"I can run a fair test to show how friction and mass change how far an object moves.",
+ sep:"Plan and Carry Out Investigations", ccc:"Cause and Effect; Systems and System Models",
+ big:"Forces can make objects start, stop, speed up, slow down or change direction. Gravity pulls everything toward the center of the Earth. Friction works against motion when surfaces rub. A heavier object needs a bigger force to change its motion.",
+ keys:["Gravity is a non-contact force that pulls objects toward Earth's center.","Friction is a contact force. It opposes motion and slows things down.","Rougher surfaces make more friction; smoother surfaces make less.","More mass means the same push causes less change in motion.","In a fair test, change only one variable at a time and run more than one trial."],
+ words:[["force","A push or a pull."],["gravity","The pull of Earth on objects, toward its center."],["friction","A force between surfaces that opposes motion."],["mass","The amount of matter in an object."],["motion","A change in position."],["non-contact force","A force that acts without touching, like gravity."],["speed","How fast something moves."],["direction","The way something is moving."]],
+ stems:["What does the pattern of data allow you to conclude from the experiment?","What do you predict would happen if we changed the mass of the object?","How would increasing/decreasing friction affect the motion of an object?","Explain a scenario when you would want to decrease or increase friction."],
+ reads:[
+  {kind:"Interactive", title:"Forces and Motion: Basics", src:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/forces-and-motion-basics", find:"Try the Friction screen. Change the surface and the mass.", purpose:"What happens to the crate's speed when you turn friction up? Write a cause-and-effect sentence."},
+  {kind:"Book", title:"Gravity", src:"Jason Chin · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"What would happen to everyday objects without gravity? Give two examples."},
+  {kind:"Book", title:"Forces Make Things Move", src:"Kimberly Brubaker Bradley · Let's-Read-and-Find-Out", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Find one example of friction in the book. Is it helping or getting in the way?"}
+ ],
+ math:{mods:["M2"], nc:["NC.5.NF.1 add and subtract fractions and mixed numbers","NC.5.MD.2 line plots with fractional measurements"],
+  why:"Distances are measured in fractions of a meter. Subtracting them tells you how much farther one trial went than another.",
+  example:"Wood floor: 4 m. Carpet: 2 m. 4 − 2 = <b>2 m farther</b> on wood. Two blocks on carpet: 1 m. Doubling the mass cut the distance in half."},
+ labs:["forces"],
+ quiz:[
+  {q:"Which surface would let a toy car roll the farthest with the same push?", o:["Carpet","Grass","Smooth tile"], a:2, why:"Smooth surfaces make less friction."},
+  {q:"You add blocks to a cart and push it with the same force. What happens?", o:["It goes farther","It goes less far","Nothing changes"], a:1, why:"More mass means the same force causes less change in motion."},
+  {q:"A ship sails past the horizon. Which way does gravity pull it?", o:["Toward the center of the Earth","Toward the North Pole","Off the edge"], a:0, why:"Gravity pulls all objects toward Earth's center, wherever they are."}
+ ]},
+{id:"PS.5.2.2", strand:"forces",
+ official:"Use mathematics and computational thinking to infer the motion of an object (including position, direction, and speed).",
+ ican:"I can make and read a distance–time graph to tell when something is moving, when it is stopped, and which object is faster.",
+ sep:"Use Mathematics and Computational Thinking; Analyze and Interpret Data", ccc:"Cause and Effect; Patterns",
+ big:"You can describe motion with numbers: how far something travels in a certain amount of time. Put time on the x-axis and distance on the y-axis. A rising line means moving. A flat line means stopped. A steeper line means faster.",
+ keys:["Motion can be measured by the distance traveled in an amount of time.","On a distance–time graph, time goes on the horizontal (x) axis and distance on the vertical (y) axis.","Flat line = stopped. Steeper line = faster.","Match data tables with the graphs they make.","Focus on understanding motion, not calculating speed formulas."],
+ words:[["position","Where something is."],["distance","How far something travels."],["axis","A number line on a graph (x is across, y is up)."],["relative","Compared to something else."],["speed","How far something goes in an amount of time."],["direction","Which way something moves: north, south, forward, back."],["time","How long something takes."],["data table","Organized rows and columns of measurements."]],
+ stems:["How is the motion of the object changing over time?","What questions could you ask next to help explain the pattern in the data?","What data is used to explain these changes in motion?","What similarities or differences do you notice in the motion in the graphs?"],
+ reads:[
+  {kind:"Interactive", title:"Forces and Motion: Basics (Motion screen)", src:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/forces-and-motion-basics", find:"Use the Motion screen and turn on Speed.", purpose:"Sketch a distance–time graph for the skateboard: start, speed up, stop."},
+  {kind:"Video & lessons", title:"PBS LearningMedia", src:"PBS", url:"https://www.pbslearningmedia.org/", find:"Search: distance time graph", purpose:"What does a flat line on a distance–time graph mean? Explain it to a partner."},
+  {kind:"Article", title:"Science News Explores", src:"Society for Science", url:"https://www.snexplores.org/", find:"Search: speed record animal", purpose:"Find one speed fact. Write it as distance and time (for example, 30 meters in 1 second)."}
+ ],
+ math:{mods:["M6","M1"], nc:["NC.5.G.1 graph points in the first quadrant to solve problems","NC.5.OA.3 relationships between two numerical patterns"],
+  why:"This objective IS a math objective. Eureka Math² Module 6 teaches the coordinate plane (Topic: Coordinate Systems) and graphing patterns (Topic: Patterns in the Coordinate Plane), the same skills you use for a distance–time graph.",
+  example:"Car A: (0, 0), (1, 2), (2, 4), (3, 4), (4, 6). From 2 s to 3 s the distance stays at 4 m, so the line is flat: <b>the car was stopped</b>."},
+ labs:["motion"],
+ quiz:[
+  {q:"On a distance–time graph, what does a flat (horizontal) line segment mean?", o:["The object is speeding up","The object is stopped","The object is going backward"], a:1, why:"Time keeps passing but distance doesn't change."},
+  {q:"Two lines start at (0, 0). Line A reaches 10 m at 5 s. Line B reaches 10 m at 2 s. Which is faster?", o:["Line A","Line B","They are the same"], a:1, why:"B covered the same distance in less time, so its line is steeper."},
+  {q:"Which axis usually shows time on a distance–time graph?", o:["The x-axis (horizontal)","The y-axis (vertical)"], a:0, why:"Time goes across; distance goes up."}
+ ]},
+/* ===== LS.5.1 ===== */
+{id:"LS.5.1.1", strand:"body",
+ official:"Use models to recognize the organizational structure of humans as a multicellular organism (cell, tissue, organ, system, organism).",
+ ican:"I can put the levels of organization in order: cells, tissues, organs, organ systems, organism.",
+ sep:"Developing and Using Models", ccc:"Systems and System Models",
+ big:"Your body is built in levels. Many cells make tissues. Tissues make organs, like the heart. Organs work together in organ systems, like the circulatory system. All the systems together make you, the organism.",
+ keys:["Multicellular organisms are made of many different parts.","cells → tissues → organs → organ systems → organism","A diagram or model can show this hierarchy.","You don't need to name cell parts or tissue types at this level."],
+ words:[["cell","The smallest living unit of the body."],["tissue","A group of similar cells working together."],["organ","Tissues working together to do a job, like the heart."],["organ system","Organs working together, like the digestive system."],["organism","A whole living thing."],["multicellular","Made of many cells."],["function","The job something does."],["structure","How something is built."]],
+ stems:["What is the organizational structure of multicellular organisms?","How can you tell if an organism is multicellular?","A ___ is made of many ___."],
+ reads:[
+  {kind:"Article", title:"KidsHealth: How the Body Works", src:"Nemours KidsHealth", url:"https://kidshealth.org/en/kids/htbw/", find:"Pick any body part article.", purpose:"Name one organ from the article and the organ system it belongs to."},
+  {kind:"Book", title:"The Busy Body Book", src:"Lizzy Rockwell · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Draw the cell → organism ladder using an example from the book."},
+  {kind:"Video & lessons", title:"PBS LearningMedia", src:"PBS", url:"https://www.pbslearningmedia.org/", find:"Search: levels of organization cells tissues organs", purpose:"Explain why a heart is an organ and not a tissue."}
+ ],
+ math:null, labs:["levels"],
+ quiz:[
+  {q:"Which list is in order from smallest to largest?", o:["organ → cell → tissue","cell → tissue → organ → organ system → organism","tissue → cell → organism"], a:1, why:"Cells build tissues, tissues build organs, and so on."},
+  {q:"The stomach is a(n)…", o:["cell","organ","organism"], a:1, why:"The stomach is made of tissues working together to do a job."},
+  {q:"How can you tell an organism is multicellular?", o:["It is very small","It has structures that make up body systems","It lives in water"], a:1, why:"That's the support document's answer: it has structures that make up body systems."}
+ ]},
+{id:"LS.5.1.2", strand:"body",
+ official:"Use models to compare the major systems of the human body (digestive, respiratory, circulatory, muscular, skeletal, nervous) as it relates to their functions necessary for life.",
+ ican:"I can name the main parts and jobs of six body systems and compare how they work together.",
+ sep:"Developing and Using Models", ccc:"Systems and System Models; Structure and Function",
+ big:"Six systems keep you alive. Circulatory: heart, blood, vessels move oxygen and nutrients. Respiratory: nose, trachea, lungs swap oxygen and carbon dioxide. Digestive: mouth to intestines break down food. Skeletal: bones support and protect. Muscular: muscles move you. Nervous: brain, spinal cord, nerves send signals.",
+ keys:["Circulatory: heart, blood, vessels. Moves blood, oxygen and nutrients; removes waste.","Respiratory: nose, trachea, lungs. Breathes in oxygen, breathes out carbon dioxide.","Muscular: muscles. Movement, posture, balance.","Skeletal: bones. Structure, support, protection.","Digestive: mouth, esophagus, stomach, intestines. Breaks food into nutrients.","Nervous: brain, spinal cord, nerves. Sends signals between brain and body.","Voluntary muscles you control (leg muscles); involuntary ones work on their own (heart, stomach)."],
+ words:[["circulatory","Moves blood through the body."],["respiratory","Breathing and gas exchange."],["digestive","Breaks food into nutrients."],["nervous","Sends signals with the brain, spinal cord and nerves."],["skeletal","Bones that support and protect."],["muscular","Muscles that move the body."],["voluntary muscle","A muscle you control, like in your leg."],["involuntary muscle","A muscle that works on its own, like the heart."]],
+ stems:["What is the function of the ___ system?","The ___ is a part of what system?","How is the ___ system similar to the ___ system?","How are the nervous and skeletal systems different?"],
+ reads:[
+  {kind:"Article", title:"KidsHealth: How the Body Works", src:"Nemours KidsHealth", url:"https://kidshealth.org/en/kids/htbw/", find:"Read about the heart, lungs, and digestive system.", purpose:"Compare two systems: how do they work together to keep you alive?"},
+  {kind:"Book", title:"Bones: Skeletons and How They Work", src:"Steve Jenkins · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Which bones protect organs? Name the bone and the organ."},
+  {kind:"Book", title:"The Magic School Bus: Inside the Human Body", src:"Joanna Cole · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Trace the bus's path. List every system it travels through, in order."}
+ ],
+ math:null, labs:["systems"],
+ quiz:[
+  {q:"Which system brings oxygen into the body and removes carbon dioxide?", o:["Digestive","Respiratory","Skeletal"], a:1, why:"Nose, trachea and lungs handle gas exchange."},
+  {q:"The heart is an example of a(n)…", o:["voluntary muscle","involuntary muscle","bone"], a:1, why:"Your heart pumps without you thinking about it."},
+  {q:"How are the digestive and respiratory systems similar?", o:["Both remove waste","Both are made of bones","Both send signals to the brain"], a:0, why:"Lungs remove carbon dioxide; the digestive system removes solid waste."}
+ ]},
+/* ===== LS.5.2 ===== */
+{id:"LS.5.2.1", strand:"eco",
+ official:"Engage in argument from evidence to compare the characteristics of several common ecosystems (including estuaries and salt marshes, oceans, lakes and ponds, rivers and streams, forests, and grasslands) in terms of their ability to support a variety of populations.",
+ ican:"I can use evidence to compare ecosystems and explain why organisms live only where their needs are met.",
+ sep:"Engaging in Argument from Evidence", ccc:"Patterns; Structure and Function",
+ big:"An ecosystem has living (biotic) parts like plants and animals, and nonliving (abiotic) parts like sunlight, water, soil and temperature. Organisms survive only where their needs are met. North Carolina has them all: mountain forests, piedmont streams, coastal estuaries and salt marshes, and the ocean.",
+ keys:["Biotic factors: plants, animals, other living things.","Abiotic factors: temperature, sunlight, water, soil, ocean currents.","Terrestrial ecosystems: forest, grassland, desert. Aquatic: ocean, lake, pond, river, stream, estuary, salt marsh.","A healthy ecosystem has many species meeting their needs in a stable web of life.","Newly introduced species can damage the balance of an ecosystem."],
+ words:[["ecosystem","Living and nonliving things interacting in an area."],["biotic","Living, or once living."],["abiotic","Nonliving, like water or sunlight."],["estuary","Where a river meets the sea and fresh water mixes with salt water."],["salt marsh","A coastal wetland with grasses that flood with the tides."],["population","All the members of one species in an area."],["habitat","The place an organism lives."],["terrestrial / aquatic","On land / in water."]],
+ stems:["What are the biotic factors found in a ___ ecosystem?","How do temperature and the amount of sunlight influence which organisms can survive in a certain environment?","What factors help living things survive in an ecosystem?","My claim is ___. My evidence is ___."],
+ reads:[
+  {kind:"Article", title:"NC Aquariums", src:"North Carolina Aquariums", url:"https://www.ncaquariums.com/", find:"Explore pages on salt marshes, estuaries and sounds.", purpose:"Make a claim: why is an NC estuary a good nursery for young fish? Use one piece of evidence."},
+  {kind:"Encyclopedia", title:"NCpedia", src:"State Library of North Carolina", url:"https://www.ncpedia.org/", find:"Search: longleaf pine OR estuaries", purpose:"Name two biotic and two abiotic factors in the ecosystem you read about."},
+  {kind:"Book", title:"Over and Under the Pond", src:"Kate Messner · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"How does the pond meet the needs of three different organisms?"}
+ ],
+ math:null, labs:["biotic"],
+ quiz:[
+  {q:"Which is an ABIOTIC factor?", o:["A salt marsh grass","Water temperature","A blue crab"], a:1, why:"Temperature isn't alive."},
+  {q:"Where does fresh river water mix with salty ocean water?", o:["A grassland","An estuary","A desert"], a:1, why:"That mix is what makes an estuary."},
+  {q:"Which claim does the evidence best support?", o:["Organisms can live anywhere","Organisms survive only where their needs are met","Only plants need water"], a:1, why:"Each population needs the right food, water, shelter and temperature."}
+ ]},
+{id:"LS.5.2.2", strand:"eco",
+ official:"Use models to classify organisms within an ecosystem according to the function they serve: producers, consumers, or decomposers.",
+ ican:"I can build a food chain with arrows that show energy moving, and sort organisms into producers, consumers and decomposers.",
+ sep:"Developing and Using Models", ccc:"Systems and System Models",
+ big:"Energy in a food chain starts with the sun. Producers (plants) make food. Consumers eat plants or other animals. Decomposers like fungi and bacteria break down dead things and return nutrients to the soil. Arrows point the way the energy moves: from the thing being eaten to the eater.",
+ keys:["The food of almost any animal can be traced back to plants.","Arrows show energy moving from producer toward consumer.","Decomposers recycle materials back into the soil for plants to use.","A food web is several food chains connected."],
+ words:[["producer","Makes its own food using sunlight (plants)."],["consumer","Gets energy by eating other organisms."],["decomposer","Breaks down dead things (fungi, bacteria)."],["food chain","One path energy takes through an ecosystem."],["food web","Many connected food chains."],["energy transfer","Energy moving from one organism to another."],["model","A diagram or object that explains how something works."],["classify","Sort into groups by features."]],
+ stems:["Where does the energy in a food chain come from?","How does energy move from a producer to a consumer?","What role does a decomposer play in an ecosystem?","How are food chains and food webs similar?"],
+ reads:[
+  {kind:"Article", title:"National Geographic Kids", src:"National Geographic", url:"https://kids.nationalgeographic.com/", find:"Search: food chain", purpose:"Draw a food chain from the reading. Check: do your arrows point toward the eater?"},
+  {kind:"Book", title:"Who Eats What? Food Chains and Food Webs", src:"Patricia Lauber · Let's-Read-and-Find-Out", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Find a food chain in the book that ends with a decomposer."},
+  {kind:"Article", title:"Wonderopolis", src:"National Center for Families Learning", url:"https://www.wonderopolis.org/", find:"Search: decomposers", purpose:"Why would an ecosystem be in trouble without decomposers?"}
+ ],
+ math:null, labs:["foodchain"],
+ quiz:[
+  {q:"In grass → grasshopper → snake → hawk, what is the grass?", o:["Producer","Consumer","Decomposer"], a:0, why:"Grass makes its own food from sunlight."},
+  {q:"Which way do the arrows point in a food chain?", o:["From the eater to the food","From the food to the eater, the way energy moves"], a:1, why:"Arrows show energy moving."},
+  {q:"Mushrooms growing on a fallen log are…", o:["Producers","Decomposers","Predators"], a:1, why:"Fungi break down dead material."}
+ ]},
+{id:"LS.5.2.3", strand:"eco",
+ official:"Use models to infer the effects that may result from the interconnected relationships of plants and animals to their ecosystem.",
+ ican:"I can predict what happens to other populations when one part of a food chain changes.",
+ sep:"Developing and Using Models", ccc:"Systems and System Models",
+ big:"Every organism in a food chain depends on the others. If the grass dries up, grasshoppers lose food, then snakes lose food, then hawks. If one population grows, the ones that eat it may grow too. Models help us predict these changes.",
+ keys:["Organisms survive only where their needs are met.","A change to one population ripples through the food chain.","If a food source disappears, consumers must move, find new food, or die.","Patterns in population data help us make predictions."],
+ words:[["population","All of one species in an area."],["increase","Get larger."],["decrease","Get smaller."],["stable","Staying about the same."],["habitat","Where an organism lives."],["environment","All the surroundings of an organism."],["infer","Make a logical conclusion from evidence."],["predict","Say what you think will happen, using evidence."]],
+ stems:["If the amount of ___ that ___ use as their main source of energy decreases, what will happen to the ___ population?","Initially, what would happen in this food chain if the number of grasshoppers increased?","If a consumer's food source is unavailable, what could happen to the food chain?"],
+ reads:[
+  {kind:"Article", title:"Science News Explores", src:"Society for Science", url:"https://www.snexplores.org/", find:"Search: invasive species", purpose:"How did a new species change the balance of an ecosystem? Draw the before and after food chain."},
+  {kind:"Encyclopedia", title:"NCpedia", src:"State Library of North Carolina", url:"https://www.ncpedia.org/", find:"Search: red wolf", purpose:"What changed in the red wolf's ecosystem? What might happen to its prey populations?"},
+  {kind:"Book", title:"Butterfly Eyes and Other Secrets of the Meadow", src:"Joyce Sidman · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Pick two organisms in the meadow. How does each depend on the other?"}
+ ],
+ math:{mods:["M6"], nc:["NC.5.OA.3 generate two numerical patterns and graph the ordered pairs"],
+  why:"Population models are number patterns. Eureka Math² Module 6 (Topic: Patterns in the Coordinate Plane) has you build two patterns from rules, pair them up, and graph them, the same way ecologists compare predator and prey numbers.",
+  example:"Grasshoppers start at 40 and grow by 20 each week. Snakes start at 4 and grow by 2. Week 3: (100, 10). Grasshoppers are always <b>10 times</b> the snakes."},
+ labs:["populations"],
+ quiz:[
+  {q:"In grass → grasshopper → snake → hawk, grasshoppers suddenly increase. What happens first?", o:["Grass decreases and snakes have more food","Hawks disappear","Nothing changes"], a:0, why:"More grasshoppers eat more grass and feed more snakes."},
+  {q:"Wild berries that cardinals eat become scarce. What happens to the cardinal population?", o:["It increases","It likely decreases","It stays exactly the same"], a:1, why:"Less food means fewer cardinals can survive."},
+  {q:"A consumer's only food source disappears. Which is NOT a likely result?", o:["It moves to find food","It finds a new food source","It makes its own food from sunlight"], a:2, why:"Only producers make food from sunlight."}
+ ]},
+/* ===== LS.5.3 ===== */
+{id:"LS.5.3.1", strand:"heredity",
+ official:"Ask questions to compare instincts and learned behaviors.",
+ ican:"I can tell the difference between instincts (born knowing) and learned behaviors (practiced or taught).",
+ sep:"Asking Questions", ccc:"Patterns",
+ big:"Some behaviors animals are born knowing how to do: spiders spin webs, salmon swim upstream to spawn, you blink. Those are instincts. Others have to be learned: riding a bike, doing pet tricks, speaking a language.",
+ keys:["Instincts: nest building, spider webs, returning to spawn, sneezing, blinking, pulling away from something hot.","Learned: riding a bike, pet tricks, parrots talking, using utensils, tying shoes.","Ask questions you can investigate: 'Would a bird raised alone still build a nest?'"],
+ words:[["instinct","A behavior an animal is born knowing."],["learned behavior","A behavior that is taught or practiced."],["reflex","A fast automatic reaction, like blinking."],["behavior","The way an organism acts."],["inherited","Passed from parents to offspring."],["migrate","Move to another place with the seasons."],["spawn","Lay eggs (fish)."],["investigate","Find out by testing."]],
+ stems:["What are examples of instincts? Of learned behaviors?","What is the difference between instincts and learned behaviors?","I wonder if ___ would still ___ if ___."],
+ reads:[
+  {kind:"Article", title:"Wonderopolis", src:"National Center for Families Learning", url:"https://www.wonderopolis.org/", find:"Search: instinct", purpose:"Write one question about an animal behavior you could investigate."},
+  {kind:"Article", title:"National Geographic Kids", src:"National Geographic", url:"https://kids.nationalgeographic.com/", find:"Search: migration", purpose:"Is migration an instinct, learned, or both? Cite one detail."},
+  {kind:"Video & lessons", title:"PBS LearningMedia", src:"PBS", url:"https://www.pbslearningmedia.org/", find:"Search: animal behavior instinct learned", purpose:"Make a two-column list from the video: Instinct | Learned."}
+ ],
+ math:null, labs:["instinct"],
+ quiz:[
+  {q:"A spider spins a web the first time it tries. This is…", o:["An instinct","A learned behavior"], a:0, why:"It was born knowing how."},
+  {q:"A dog learns to roll over for a treat. This is…", o:["An instinct","A learned behavior"], a:1, why:"It was taught."},
+  {q:"Which is a good investigable question?", o:["Are spiders gross?","Would a bird raised alone still build a nest like its parents?","What is the best animal?"], a:1, why:"It can be tested and has a predictable outcome."}
+ ]},
+{id:"LS.5.3.2", strand:"heredity",
+ official:"Ask questions to compare inherited and acquired traits.",
+ ican:"I can tell which traits come from parents (inherited) and which come from the environment or experience (acquired).",
+ sep:"Asking Questions", ccc:"Patterns",
+ big:"Offspring look like their parents because they inherit traits like eye color, petal color and leaf shape. Other traits are acquired from the environment: a short haircut, a broken tree limb, or a flamingo turning pink from the food it eats.",
+ keys:["Inherited traits are passed down through genetic information.","Acquired traits come from the environment or experiences.","Some traits involve both, like plant height (genes + sunlight and water)."],
+ words:[["inherited trait","A trait passed from parents to offspring."],["acquired trait","A trait that comes from the environment or experience."],["offspring","The young of a living thing."],["generation","One step in a family line."],["genetics","The study of how traits are passed down."],["characteristic","A feature of an organism."],["environment","The surroundings that affect an organism."],["parent","An organism that produces offspring."]],
+ stems:["Why do offspring resemble their parents?","What are examples of inherited traits?","What is the difference between inherited traits and acquired traits?"],
+ reads:[
+  {kind:"Book", title:"Gregor Mendel: The Friar Who Grew Peas", src:"Cheryl Bardoe · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"What question did Mendel ask about pea plants? How did he test it?"},
+  {kind:"Article", title:"Wonderopolis", src:"National Center for Families Learning", url:"https://www.wonderopolis.org/", find:"Search: why do flamingos turn pink", purpose:"Is a flamingo's pink color inherited or acquired? Use the text to explain."},
+  {kind:"Article", title:"KidsHealth", src:"Nemours KidsHealth", url:"https://kidshealth.org/en/kids/", find:"Search: genes", purpose:"List three inherited traits a person might have."}
+ ],
+ math:null, labs:["traits"],
+ quiz:[
+  {q:"Which is an inherited trait?", o:["A short haircut","Eye color","A scar"], a:1, why:"Eye color comes from genetic information."},
+  {q:"A flamingo turns deeper pink because of its diet. That color is…", o:["Inherited","Acquired"], a:1, why:"It comes from the environment (food)."},
+  {q:"A tree has a broken limb from a storm. That is…", o:["Inherited","Acquired"], a:1, why:"The storm caused it, not genes."}
+ ]},
+/* ===== ESS.5.1 ===== */
+{id:"ESS.5.1.1", strand:"earth",
+ official:"Analyze and interpret data to compare daily and seasonal changes in weather conditions (including wind speed and direction, precipitation, and temperature) and patterns.",
+ ican:"I can read weather graphs to compare places and seasons, and tell weather from climate.",
+ sep:"Analyzing and Interpreting Data; Using Mathematics", ccc:"Patterns",
+ big:"Weather is the day-to-day condition of the air: temperature, wind, precipitation, clouds and air pressure. Climate is the typical weather of a place over a long time. In North Carolina, the mountains are cooler than the coast, and every place warms up in summer and cools in winter.",
+ keys:["Weather tools: thermometer, barometer, wind vane, anemometer, rain gauge.","Graph data to find daily and seasonal patterns.","Weather = today. Climate = the long-term pattern.","Latitude and geography change climate: warmer near the equator, cooler at high elevation.","Seasons are opposite in the Northern and Southern Hemispheres."],
+ words:[["weather","Day-to-day condition of the atmosphere."],["climate","Typical weather of a place over many years."],["precipitation","Water falling from clouds: rain, snow, sleet, hail."],["anemometer","Measures wind speed."],["wind vane","Shows wind direction."],["barometer","Measures air pressure."],["rain gauge","Measures how much rain fell."],["latitude","How far north or south of the equator."]],
+ stems:["How did the weather change based on time or location?","How does wind direction or speed impact weather patterns?","How is the weather impacted by latitude?","Based on the weather data, how would you describe the climate of the location?"],
+ reads:[
+  {kind:"Data & articles", title:"NOAA SciJinks", src:"NOAA / NASA", url:"https://scijinks.gov/", find:"Search: weather vs climate", purpose:"Write one sentence about today's weather and one about your town's climate."},
+  {kind:"Data", title:"National Weather Service, Raleigh", src:"NOAA NWS", url:"https://www.weather.gov/rah/", find:"Look at the 7-day forecast.", purpose:"Make a table of the highs for 7 days. What pattern do you see?"},
+  {kind:"Article", title:"NASA Climate Kids", src:"NASA", url:"https://climatekids.nasa.gov/", find:"Search: weather and climate", purpose:"Explain why one hot day doesn't tell you a place's climate."}
+ ],
+ math:{mods:["M6","M4"], nc:["NC.5.G.1 graph points in the first quadrant","NC.5.NBT.7 operations with decimals (rainfall in inches)"],
+  why:"Weather is data. Plotting monthly temperatures as ordered pairs (month, °F) and finding the difference between highs and lows uses the coordinate plane and subtraction you practice in Eureka Math².",
+  example:"Raleigh: July high ≈ 89 °F, January high ≈ 51 °F. 89 − 51 = <b>38 degrees</b> of seasonal change."},
+ labs:["weather"],
+ quiz:[
+  {q:"Which tool measures wind speed?", o:["Barometer","Anemometer","Rain gauge"], a:1, why:"Anemometers spin faster in stronger wind."},
+  {q:"'It is 72 °F and sunny right now' describes…", o:["Weather","Climate"], a:0, why:"It's the condition right now."},
+  {q:"Which NC place usually has the coolest summer highs?", o:["Wilmington (coast)","Raleigh (piedmont)","Asheville (mountains)"], a:2, why:"Higher elevation is cooler."}
+ ]},
+{id:"ESS.5.1.2", strand:"earth",
+ official:"Analyze and interpret weather data to explain current and upcoming weather conditions (including severe weather such as hurricanes and tornadoes) in a given location.",
+ ican:"I can use air pressure, fronts and clouds to predict upcoming weather, including severe storms.",
+ sep:"Analyzing and Interpreting Data", ccc:"Patterns",
+ big:"Meteorologists measure many things to forecast weather. High pressure usually brings clear skies. Low pressure brings clouds, wind and precipitation. When a cold front pushes into warm air, warm air rises and storms can form. Hurricanes form over warm ocean water with low pressure and very high winds.",
+ keys:["Air masses form over land or ocean and are warm or cold, moist or dry.","Fronts are where air masses meet. Cold fronts can bring heavy rain and thunderstorms.","Falling barometer = low pressure coming = unsettled weather.","Warm air rises; cold air sinks.","Tornadoes: thunderstorms, strong winds, rotation. Hurricanes: warm ocean, low pressure, high winds.","Maps, radar and satellites track storms. (You don't need to name cloud types.)"],
+ words:[["air mass","A huge body of air with similar temperature and moisture."],["front","The boundary where two air masses meet."],["air pressure","The weight of air pressing down."],["forecast","A prediction of upcoming weather."],["radar","A tool that shows where precipitation is."],["hurricane","A huge storm that forms over warm ocean water."],["tornado","A rotating column of air touching the ground."],["severe weather","Dangerous weather like storms and hail."]],
+ stems:["What type of weather would you expect when a cold front meets a warm air mass?","When reading a weather map, how can you tell where ___ is located?","A rising barometer is associated with what type of weather?","What type of air pressure and wind speeds are associated with hurricanes?"],
+ reads:[
+  {kind:"Data & articles", title:"National Hurricane Center", src:"NOAA", url:"https://www.nhc.noaa.gov/", find:"Look at the current outlook map.", purpose:"Where are storms possible right now? What would you tell a family on the NC coast?"},
+  {kind:"Book", title:"Hurricanes", src:"Seymour Simon · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"What conditions does a hurricane need to form? List three."},
+  {kind:"Article", title:"NWS JetStream: Online Weather School", src:"NOAA NWS", url:"https://www.weather.gov/jetstream/", find:"Read the sections on air masses and fronts.", purpose:"Draw a cold front meeting warm air. Label where clouds form and why."}
+ ],
+ math:{mods:["M4"], nc:["NC.5.NBT.3 compare decimals to thousandths","NC.5.NBT.7 subtract decimals"],
+  why:"Barometers read in decimals (like 29.92 inches). Comparing and subtracting decimals shows whether pressure is falling, and how fast.",
+  example:"Monday 30.21 in. → Thursday 29.58 in. 30.21 − 29.58 = <b>0.63 in.</b> drop. Falling pressure means a storm may be coming."},
+ labs:["pressure"],
+ quiz:[
+  {q:"The barometer is falling quickly. What weather is most likely coming?", o:["Clear and sunny","Clouds, wind and precipitation"], a:1, why:"Low pressure brings unsettled weather."},
+  {q:"Which conditions help a hurricane form?", o:["Cold land and high pressure","Warm ocean water, low pressure, high winds","Dry desert air"], a:1, why:"Hurricanes need warm water as fuel."},
+  {q:"What usually happens when a cold front meets a warm, moist air mass?", o:["Heavy precipitation, possible thunderstorms","Nothing","It gets foggy forever"], a:0, why:"Warm air is pushed up, cools, and forms storm clouds."}
+ ]},
+{id:"ESS.5.1.3", strand:"earth",
+ official:"Construct an explanation to summarize the ocean's influences on weather and climate in North Carolina.",
+ ican:"I can explain how the Atlantic Ocean and the Gulf Stream shape weather and climate on the North Carolina coast.",
+ sep:"Constructing Explanations", ccc:"Cause and Effect; Systems and System Models",
+ big:"The Gulf Stream is a warm current that flows from south of Florida up the eastern seaboard. It warms the air near the NC coast in cooler months, so the Coastal Plain has milder winters than the mountains. Water and land heat differently, which makes sea breezes by day and land breezes at night. Warm ocean water also fuels hurricanes.",
+ keys:["The Gulf Stream moderates weather along the East Coast, including NC.","NC's Coastal Plain has milder winters than the mountains.","Sea breeze: land heats faster in the day, warm air rises, cool air blows in from the sea.","Land breeze: at night land cools faster, so air flows from land to sea.","Warm ocean water → more clouds and rain, and fuel for hurricanes."],
+ words:[["Gulf Stream","A warm ocean current along the East Coast."],["current","A steady flow of ocean water."],["sea breeze","Cool wind from the sea toward land during the day."],["land breeze","Wind from land toward the sea at night."],["coastal","Near the coast."],["moderate","Make less extreme."],["climate","Long-term weather pattern."],["air pressure","The weight of the air."]],
+ stems:["How do ocean currents impact weather on land?","How does the change in temperature over land and water impact the weather on the coast of NC?","Because the ocean ___, the coast has ___."],
+ reads:[
+  {kind:"Encyclopedia", title:"NCpedia", src:"State Library of North Carolina", url:"https://www.ncpedia.org/", find:"Search: Gulf Stream", purpose:"Summarize in 2 sentences how the Gulf Stream affects NC's coast."},
+  {kind:"Data & articles", title:"NOAA SciJinks", src:"NOAA / NASA", url:"https://scijinks.gov/", find:"Search: sea breeze OR ocean currents", purpose:"Draw arrows showing a sea breeze. Label warm land, cool sea, rising air."},
+  {kind:"Data", title:"National Hurricane Center", src:"NOAA", url:"https://www.nhc.noaa.gov/", find:"Look at past storm tracks near NC.", purpose:"What pattern do you notice in where hurricanes travel along the coast?"}
+ ],
+ math:{mods:["M6","M4"], nc:["NC.5.G.1 graph points in the first quadrant"],
+  why:"Comparing coast and mountain temperatures on the same graph turns the explanation into evidence you can see.",
+  example:"January highs: Wilmington ≈ 57 °F, Asheville ≈ 48 °F. 57 − 48 = <b>9 degrees warmer</b> on the coast."},
+ labs:["breeze"],
+ quiz:[
+  {q:"Why do NC's coastal towns have milder winters than the mountains?", o:["The ocean and Gulf Stream warm the air","They are closer to the moon","They have more trees"], a:0, why:"The warm current moderates the air temperature."},
+  {q:"On a sunny afternoon at the beach, which way does the breeze blow?", o:["From the sea toward the land","From the land toward the sea"], a:0, why:"Land heats faster, warm air rises, and cooler sea air moves in."},
+  {q:"Warmer ocean water usually leads to…", o:["Fewer clouds","More clouds and rain, and stronger hurricanes"], a:1, why:"Warm water adds moisture and energy to the air."}
+ ]},
+{id:"ESS.5.1.4", strand:"earth",
+ official:"Use models to explain how the sun's energy drives the processes of the water cycle (including evaporation, transpiration, condensation, precipitation).",
+ ican:"I can use a particle model to explain how the sun's energy drives evaporation, transpiration, condensation and precipitation.",
+ sep:"Developing and Using Models; Engaging in Argument from Evidence", ccc:"Cause and Effect",
+ big:"The sun powers the water cycle. When sunlight heats water, its particles vibrate faster and spread apart, so the water evaporates into invisible water vapor. Plants release water vapor too (transpiration). When vapor cools, the particles slow down and move closer together, forming droplets (condensation) in clouds and dew. Droplets join and fall as precipitation.",
+ keys:["Heat added: particles vibrate faster and move apart. Solid → liquid → gas.","Heat removed: particles slow down and move closer. Gas → liquid → solid.","Evaporated water is in the air as invisible water vapor.","Clouds, dew, fog and the drops on a cold glass are condensation.","More sun energy → more evaporation. More transpiration in summer and in daytime."],
+ words:[["evaporation","Liquid water turning into water vapor."],["transpiration","Plants releasing water vapor through their leaves."],["condensation","Water vapor cooling into liquid droplets."],["precipitation","Water falling from clouds."],["water vapor","Water as an invisible gas."],["particles","Tiny bits of matter too small to see."],["dew","Droplets that condense on cool surfaces."],["sun's energy","Heat and light from the sun that power the water cycle."]],
+ stems:["How does the amount of sunlight over a body of water affect evaporation?","When would there be more transpiration in field crops?","Water evaporates when it is ___ and condenses when it is ___.","Why do water droplets form on the side of a cold glass on a hot day?"],
+ reads:[
+  {kind:"Article", title:"NASA Climate Kids", src:"NASA", url:"https://climatekids.nasa.gov/", find:"Search: water cycle", purpose:"Draw the water cycle and circle every step where the sun's energy is doing the work."},
+  {kind:"Book", title:"Water Is Water", src:"Miranda Paul · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"For each page, name the state of matter and whether heat was added or removed."},
+  {kind:"Book", title:"A Drop Around the World", src:"Barbara Shaw McKinney · ask your school librarian", url:"https://www.nsta.org/outstanding-science-trade-books-students-k-12", find:"Look for this title in your library catalog.", purpose:"Trace Drop's journey. Which step is condensation? Which is transpiration?"}
+ ],
+ math:null, labs:["particles","watercycle"],
+ quiz:[
+  {q:"Why do wet clothes dry faster on a hot summer day?", o:["The water particles get more energy and evaporate faster","The clothes get lighter","The wind is colder"], a:0, why:"More energy means more evaporation."},
+  {q:"Drops form on a cold glass of lemonade on a hot day. This is…", o:["Evaporation","Condensation","Transpiration"], a:1, why:"Water vapor in the air cools on the glass and becomes liquid."},
+  {q:"When heat is removed from water vapor, its particles…", o:["Move faster and spread apart","Slow down and move closer together"], a:1, why:"Cooling slows particles, and gas becomes liquid."}
+ ]}
+];
+const OBJ_BY_ID = Object.fromEntries(OBJ.map(o => [o.id, o]));
+
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const h = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const app = $("#app");
+function starHTML(id){ const s = starsFor(id); return `<span class="stars" data-stars="${id}" aria-label="${s.filter(Boolean).length} of 3 stars">${s.map(on => `<span class="${on?'on':''}">★</span>`).join("")}</span>`; }
+function refreshStars(id){ document.querySelectorAll(`[data-stars="${CSS.escape(id)}"]`).forEach(el => el.outerHTML = starHTML(id)); }
+function updateStarTotal(){ let n=0; OBJ.forEach(o => n += starsFor(o.id).filter(Boolean).length); $("#starTotal").textContent = `★ ${n} / ${OBJ.length*3}`; }
+function near(a, b, tol=0.001){ return Math.abs(a-b) <= tol; }
+function parseNum(str){
+  str = String(str).trim().replace(/,/g,""); if(!str) return NaN;
+  let m = str.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/); if(m) return +m[1] + (+m[2])/(+m[3]);
+  m = str.match(/^(\d+)\s*\/\s*(\d+)$/); if(m) return (+m[1])/(+m[2]);
+  return Number(str);
+}
+function quarters(x){ const q = Math.round(x*4); const w = Math.floor(q/4), r = q%4; const fr = ["","¼","½","¾"][r]; return (w? w : (r? "" : "0")) + fr; }
+function fmt(n, d=2){ return Number(n).toFixed(d).replace(/\.?0+$/,""); }
+
+/* line chart (SVG string). series: [{name, pts:[[x,y]], cls:"s1"}] */
+function lineChart(o){
+  const W=o.w||600, H=o.h||320, L=52, R=18, T=14, B=48;
+  const sx = x => L + (x-o.xMin)/(o.xMax-o.xMin)*(W-L-R);
+  const sy = y => H-B - (y-o.yMin)/(o.yMax-o.yMin)*(H-T-B);
+  let g = "";
+  for(let y=o.yMin; y<=o.yMax+1e-9; y+=o.yStep){ g += `<line class="gl" x1="${L}" x2="${W-R}" y1="${sy(y)}" y2="${sy(y)}"/><text x="${L-8}" y="${sy(y)+4}" text-anchor="end">${o.yFmt?o.yFmt(y):fmt(y)}</text>`; }
+  for(let x=o.xMin; x<=o.xMax+1e-9; x+=o.xStep){ g += `<line class="gl" y1="${T}" y2="${H-B}" x1="${sx(x)}" x2="${sx(x)}"/><text x="${sx(x)}" y="${H-B+18}" text-anchor="middle">${o.xFmt?o.xFmt(x):fmt(x)}</text>`; }
+  g += `<line class="axis" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}"/>`;
+  g += `<text x="${(L+W-R)/2}" y="${H-8}" text-anchor="middle">${h(o.xLabel)}</text><text transform="translate(14 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">${h(o.yLabel)}</text>`;
+  (o.series||[]).forEach(s => {
+    if(!s.pts.length) return;
+    const d = s.pts.map((p,i) => `${i?"L":"M"}${sx(p[0]).toFixed(1)} ${sy(p[1]).toFixed(1)}`).join(" ");
+    g += `<path d="${d}" style="fill:none;stroke:var(--${s.cls});stroke-width:3;stroke-linejoin:round;stroke-linecap:round"/>`;
+    s.pts.forEach(p => g += `<circle cx="${sx(p[0])}" cy="${sy(p[1])}" r="4.5" style="fill:var(--${s.cls});stroke:var(--card);stroke-width:2"><title>${h(s.name)}: ${o.xFmt?o.xFmt(p[0]):p[0]}, ${p[1]}</title></circle>`);
+  });
+  return {svg:`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${h(o.aria||o.yLabel+' vs '+o.xLabel)}">${g}${o.extra||""}</svg>`, sx, sy, W, H, L, R, T, B};
+}
+function legend(series){ return `<div class="legend">${series.map(s => `<span><span class="swatch" style="background:var(--${s.cls})"></span>${h(s.name)}</span>`).join("")}</div>`; }
+function feedback(el, ok, msg){ el.className = "fb " + (ok===null ? "info" : ok ? "ok" : "no"); el.innerHTML = msg; el.hidden = false; }
+
+/* ---------- LABS ---------- */
+const LABS = {};
+
+/* Mass lab: PS.5.1.1 */
+LABS.mass = {title:"Mass Lab: does matter disappear?", tag:"Interactive lab · math: decimals & metric units", mount(el, objId){
+  const S = [
+    {n:"Dissolve sugar in tea", before:[["Glass of tea",411],["Sugar",10]], after:421, sys:"closed", note:"The sugar dissolved and seemed to vanish, but its 10 g are still in the drink."},
+    {n:"Melt ice in a sealed jar", before:[["Sealed jar with ice",352.5]], after:352.5, sys:"closed", note:"The ice changed to liquid water. Same matter, same weight."},
+    {n:"Tear paper into pieces", before:[["Sheet of paper",4.8]], after:4.8, sys:"closed", note:"The whole equals the sum of its parts."},
+    {n:"Baking soda + vinegar in a sealed bag", before:[["Baking soda",15.25],["Vinegar in sealed bag",171.15]], after:186.4, sys:"closed", note:"A gas formed (a new substance!) but the bag kept it in, so the weight stayed 186.4 g."},
+    {n:"Leave water in an open cup for 4 days", before:[["Open cup of water",250]], after:212, sys:"open", note:"The cup was open. 38 g of water evaporated into the air as water vapor. The matter still exists, just not in the cup."}
+  ];
+  let cur = 0, guessed = false;
+  el.innerHTML = `
+   <div class="row" role="group" aria-label="Choose an investigation" id="mScen"></div>
+   <div class="twocol">
+    <div class="panel">
+      <div class="eyebrow">Before</div>
+      <div id="mBefore" class="mono"></div>
+      <div class="eyebrow">Predict: after the change, the scale will read…</div>
+      <div class="row" id="mGuess">
+        <button class="btn" data-g="less">Less</button><button class="btn" data-g="same">The same</button><button class="btn" data-g="more">More</button>
+      </div>
+      <div id="mFb" class="fb" hidden></div>
+    </div>
+    <div class="panel scale" aria-live="polite">
+      <div class="eyebrow">Digital scale</div>
+      <div class="readout" id="mRead">—</div>
+      <svg width="220" height="40" viewBox="0 0 220 40" aria-hidden="true"><rect x="10" y="4" width="200" height="10" rx="4" style="fill:var(--ink-2)"/><rect x="60" y="14" width="100" height="22" rx="4" style="fill:var(--line)"/></svg>
+      <div class="muted" id="mSys"></div>
+    </div>
+   </div>
+   <div class="panel">
+     <div class="eyebrow">Your turn · conservation math</div>
+     <p id="mQ"></p>
+     <div class="row"><label for="mAns" class="mono">Answer (g):</label><input id="mAns" type="text" inputmode="decimal" autocomplete="off"><button class="btn primary" id="mCheck">Check</button><button class="btn" id="mNew">New problem</button></div>
+     <div id="mFb2" class="fb" hidden></div>
+   </div>`;
+  const scen = $("#mScen", el);
+  scen.innerHTML = S.map((s,i) => `<button class="btn" data-i="${i}">${h(s.n)}</button>`).join("");
+  function show(){
+    const s = S[cur]; guessed = false;
+    scen.querySelectorAll("button").forEach((b,i) => b.classList.toggle("sel", i===cur));
+    const tot = s.before.reduce((a,b) => a+b[1], 0);
+    $("#mBefore", el).innerHTML = s.before.map(b => `${h(b[0])}: <b>${fmt(b[1])} g</b>`).join("<br>") + (s.before.length>1 ? `<br>Total: ${s.before.map(b=>fmt(b[1])).join(" + ")} = <b>${fmt(tot)} g</b>` : "");
+    $("#mRead", el).textContent = fmt(tot) + " g";
+    $("#mSys", el).textContent = s.sys === "closed" ? "Closed system: nothing gets in or out." : "Open system: things can escape into the air.";
+    $("#mFb", el).hidden = true;
+  }
+  scen.addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return; cur = +b.dataset.i; show(); });
+  $("#mGuess", el).addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    const s = S[cur], tot = s.before.reduce((a,b) => a+b[1], 0);
+    const actual = near(s.after, tot) ? "same" : s.after < tot ? "less" : "more";
+    $("#mRead", el).textContent = fmt(s.after) + " g";
+    const ok = b.dataset.g === actual;
+    feedback($("#mFb", el), ok, (ok ? "Correct! " : `Not quite. It reads ${fmt(s.after)} g. `) + h(s.note));
+    mark(objId, "lab");
+  });
+  /* random practice */
+  let ans = 0;
+  function newQ(){
+    const kind = Math.floor(Math.random()*3);
+    if(kind === 0){ const w = (Math.floor(Math.random()*3000)+1500)/10, s = (Math.floor(Math.random()*2000)+500)/100; ans = Math.round((w+s)*100)/100;
+      $("#mQ", el).innerHTML = `You stir <b>${fmt(s)} g</b> of salt into a sealed bottle holding <b>${fmt(w)} g</b> of water. The salt dissolves. What does the bottle weigh now?`; }
+    else if(kind === 1){ const kg = (Math.floor(Math.random()*40)+5)/10; ans = Math.round(kg*1000);
+      $("#mQ", el).innerHTML = `A sealed container of ice weighs <b>${fmt(kg)} kg</b>. After the ice melts, how many <b>grams</b> does it weigh? (1 kg = 1,000 g)`; }
+    else { const tot = (Math.floor(Math.random()*4000)+2000)/10, part = (Math.floor(Math.random()*900)+100)/10; ans = Math.round((tot-part)*100)/100;
+      $("#mQ", el).innerHTML = `A clay figure weighs <b>${fmt(tot)} g</b>. You break off the head, which weighs <b>${fmt(part)} g</b>. What does the rest of the figure weigh?`; }
+    $("#mAns", el).value = ""; $("#mFb2", el).hidden = true;
+  }
+  $("#mCheck", el).addEventListener("click", () => {
+    const v = parseNum($("#mAns", el).value);
+    if(isNaN(v)){ feedback($("#mFb2", el), false, "Type a number, like 421 or 186.4."); return; }
+    const ok = near(v, ans, 0.005);
+    feedback($("#mFb2", el), ok, ok ? `Yes! ${fmt(ans)} g. The parts add up to the whole.` : `Try again. Hint: line up the decimal points before you add or subtract.`);
+    if(ok) mark(objId, "lab");
+  });
+  $("#mAns", el).addEventListener("keydown", e => { if(e.key === "Enter") $("#mCheck", el).click(); });
+  $("#mNew", el).addEventListener("click", newQ);
+  show(); newQ();
+}};
+
+/* Generic sort lab */
+function sortLab(items, cats, intro){ return {mount(el, objId){
+  el.innerHTML = `<p>${intro}</p><div class="cards">${items.map((it,i) => `<div class="sortcard" data-i="${i}"><b>${h(it[0])}</b><div class="opts">${cats.map((c,j) => `<button class="btn" data-c="${j}">${h(c)}</button>`).join("")}</div><div class="muted why" hidden></div></div>`).join("")}</div><div class="fb info" id="sScore">0 of ${items.length} sorted correctly</div>`;
+  let right = new Set();
+  el.addEventListener("click", e => {
+    const b = e.target.closest("button[data-c]"); if(!b) return;
+    const card = b.closest(".sortcard"), i = +card.dataset.i, c = +b.dataset.c, ok = items[i][1] === c;
+    card.classList.toggle("ok", ok); card.classList.toggle("no", !ok);
+    card.querySelectorAll("button").forEach(x => x.classList.toggle("sel", x===b));
+    const w = card.querySelector(".why"); w.hidden = false; w.textContent = ok ? (items[i][2]||"Correct.") : "Look again. Think about the clues.";
+    if(ok) right.add(i); else right.delete(i);
+    $("#sScore", el).textContent = `${right.size} of ${items.length} sorted correctly`;
+    if(right.size === items.length){ feedback($("#sScore", el), true, `All ${items.length} sorted correctly!`); mark(objId, "lab"); }
+  });
+}};}
+
+LABS.newsub = Object.assign({title:"Sort it: new substance or not?", tag:"Interactive sort"}, sortLab([
+  ["Baking soda + vinegar: bubbles fill a balloon",0,"A gas formed, a new substance."],
+  ["Sugar dissolves in water",1,"Dissolving is a physical change; the sugar is still there."],
+  ["Crushing an aluminum can",1,"Same metal, new shape."],
+  ["An iron nail rusts",0,"Rust is a new substance with new color and texture."],
+  ["Burning wood",0,"Ash, smoke and heat show new substances formed."],
+  ["Ice melts into water",1,"A change of state only."],
+  ["Milk spoils and smells sour",0,"A new odor is a clue a new substance formed."],
+  ["Mixing sand and pebbles",1,"You could separate them again."]
+], ["New substance","No new substance"], "Read each change. Is there evidence (color, odor, bubbles, temperature) that a new substance formed?"));
+
+LABS.biotic = Object.assign({title:"Sort it: biotic or abiotic?", tag:"Interactive sort · NC ecosystems"}, sortLab([
+  ["Longleaf pine tree",0],["Sunlight",1],["Salt marsh cordgrass",0],["Ocean currents",1],["Blue crab",0],["Soil",1],["Water temperature",1],["Beetle",0],["Fungi on a log",0],["Amount of rainfall",1]
+], ["Biotic (living)","Abiotic (nonliving)"], "Every ecosystem has living and nonliving parts. Sort these from North Carolina forests, marshes and the coast."));
+
+LABS.instinct = Object.assign({title:"Sort it: instinct or learned?", tag:"Interactive sort"}, sortLab([
+  ["A spider spins a web",0],["Riding a bike",1],["Salmon swim upstream to spawn",0],["A dog does tricks",1],["Sneezing",0],["Speaking a language",1],["A bird builds its first nest",0],["Using a fork and spoon",1],["Squirrels storing food for winter",0],["Prairie dogs warning their group",1,"Prairie dogs learn and communicate danger calls."]
+], ["Instinct","Learned"], "Was the animal born knowing how, or did it have to learn?"));
+
+LABS.traits = Object.assign({title:"Sort it: inherited or acquired?", tag:"Interactive sort"}, sortLab([
+  ["Eye color",0],["A short haircut",1],["Petal color of a flower",0],["A broken tree limb",1],["Flamingo's pink color from its diet",1],["Tongue rolling",0],["Leaf shape",0],["A broken tusk on an elephant",1],["Fur texture",0],["Pierced ears",1]
+], ["Inherited","Acquired"], "Did the trait come from the parents (genetic information) or from the environment and experience?"));
+
+LABS.watercycle = Object.assign({title:"Sort it: heat added or heat removed?", tag:"Interactive sort"}, sortLab([
+  ["Puddle evaporates on a sunny day",0],["Dew forms on grass at night",1],["Leaves release water vapor (transpiration)",0],["Clouds form as vapor rises and cools",1],["Ice melts in a lemonade",0],["Water freezes into ice",1],["Drops form on a cold glass",1],["Wet clothes dry on a clothesline",0]
+], ["Heat added","Heat removed"], "Is energy being added to the water particles (they speed up and spread out) or taken away (they slow down and move closer)?"));
+
+/* Generic order lab */
+function orderLab(items, correct, intro, arrow="→"){ return {mount(el, objId){
+  el.innerHTML = `<p>${intro}</p><div class="row" id="oPool">${items.map(t => `<button class="btn" data-t="${h(t)}">${h(t)}</button>`).join("")}</div><div class="chain" id="oChain" aria-live="polite"><span class="muted">Tap the items in order…</span></div><div class="row"><button class="btn" id="oReset">Start over</button></div><div id="oFb" class="fb" hidden></div>`;
+  let seq = [];
+  function draw(){ $("#oChain", el).innerHTML = seq.length ? seq.map(t => `<span class="link">${h(t)}</span>`).join(`<span class="arrow">${arrow}</span>`) : `<span class="muted">Tap the items in order…</span>`; }
+  $("#oPool", el).addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b || b.disabled) return;
+    seq.push(b.dataset.t); b.disabled = true; draw();
+    if(seq.length === correct.length){
+      const ok = seq.every((t,i) => t === correct[i]);
+      feedback($("#oFb", el), ok, ok ? "That's right! " + correct.join(` ${arrow} `) : "Not quite. Hint: start with the " + (arrow==="→" ? "smallest / the source of energy" : "first step") + ". Tap Start over to try again.");
+      if(ok) mark(objId, "lab");
+    }
+  });
+  $("#oReset", el).addEventListener("click", () => { seq = []; draw(); $("#oFb", el).hidden = true; el.querySelectorAll("#oPool button").forEach(b => b.disabled = false); });
+}};}
+LABS.levels = Object.assign({title:"Build the body ladder", tag:"Model builder"}, orderLab(["organ system","cell","organism","organ","tissue"], ["cell","tissue","organ","organ system","organism"], "Tap the levels of organization from smallest to largest."));
+LABS.foodchain = {title:"Food chain builder", tag:"Model builder · producers, consumers, decomposers", mount(el, objId){
+  const sub = document.createElement("div"); el.appendChild(sub);
+  orderLab(["snake","grass","hawk","sun","grasshopper"], ["sun","grass","grasshopper","snake","hawk"], "Build the food chain. Start with where the energy comes from, then follow the arrows toward the eater.").mount(sub, objId);
+  const sub2 = document.createElement("div"); sub2.className = "panel"; el.appendChild(sub2);
+  sortLab([["Grass",0],["Grasshopper",1],["Mushroom",2],["Hawk",1],["Oak tree",0],["Bacteria in soil",2],["Snake",1],["Algae in a pond",0]], ["Producer","Consumer","Decomposer"], "Now classify each organism by the job it does.").mount(sub2, objId);
+}};
+
+/* Match lab: body systems */
+LABS.systems = {title:"Which system is it part of?", tag:"Model match", mount(el, objId){
+  const sys = ["Circulatory","Respiratory","Digestive","Skeletal","Muscular","Nervous"];
+  const parts = [["Heart",0],["Blood vessels",0],["Lungs",1],["Trachea",1],["Stomach",2],["Intestines",2],["Esophagus",2],["Skull",3],["Femur (thigh bone)",3],["Biceps",4],["Brain",5],["Spinal cord",5]];
+  el.innerHTML = `<p>Choose the system each structure belongs to.</p><div class="cards">${parts.map((p,i) => `<label class="sortcard" data-i="${i}"><b>${h(p[0])}</b><select id="sys${i}"><option value="">Choose a system…</option>${sys.map((s,j) => `<option value="${j}">${s}</option>`).join("")}</select></label>`).join("")}</div><div class="fb info" id="syFb">0 of ${parts.length} correct</div>`;
+  el.addEventListener("change", e => {
+    const sel = e.target.closest("select"); if(!sel) return;
+    const card = sel.closest(".sortcard"), i = +card.dataset.i, ok = sel.value !== "" && +sel.value === parts[i][1];
+    card.classList.toggle("ok", ok); card.classList.toggle("no", sel.value !== "" && !ok);
+    const n = el.querySelectorAll(".sortcard.ok").length;
+    if(n === parts.length){ feedback($("#syFb", el), true, "All correct! Now explain how two of these systems work together."); mark(objId, "lab"); }
+    else feedback($("#syFb", el), null, `${n} of ${parts.length} correct`);
+  });
+}};
+
+/* Cooling cups: PS.5.1.3 */
+LABS.cooling = {title:"Cooling Cups Lab", tag:"Data lab · graphing & subtraction", mount(el, objId){
+  const T = [0,5,10,15,20,25,30];
+  const D = [
+    {name:"Metal cup", cls:"s2", v:[80,66,55,47,41,37,34]},
+    {name:"Paper cup", cls:"s4", v:[80,70,62,55,50,46,43]},
+    {name:"Plastic cup", cls:"s1", v:[80,71,64,58,53,49,46]},
+    {name:"Foam cup", cls:"s3", v:[80,77,74,72,70,68,66]}
+  ];
+  let on = D.map(() => true);
+  el.innerHTML = `<p>A class poured 80 °C water into four cups and recorded the temperature every 5 minutes. <span class="muted">(Example class data.)</span></p>
+   <div class="row" id="cTog">${D.map((d,i) => `<label class="row" style="gap:6px"><input type="checkbox" id="cup${i}" checked> <span class="swatch" style="background:var(--${d.cls})"></span>${d.name}</label>`).join("")}</div>
+   <div class="panel chartwrap" id="cChart"></div>
+   <div class="tablewrap"><table class="data"><thead><tr><th>Minutes</th>${T.map(t => `<th>${t}</th>`).join("")}</tr></thead><tbody>${D.map(d => `<tr><td>${d.name}</td>${d.v.map(x => `<td>${x}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+   <div class="panel"><div class="eyebrow">Analyze the data</div>
+    <div class="row"><label for="cq1">1. How many degrees did the <b>foam</b> cup cool in 30 minutes?</label><input id="cq1" type="text" inputmode="decimal"></div>
+    <div class="row"><label for="cq2">2. How many degrees did the <b>metal</b> cup cool?</label><input id="cq2" type="text" inputmode="decimal"></div>
+    <div class="row"><label for="cq3">3. Best insulator for hot chocolate:</label><select id="cq3"><option value="">Choose…</option>${D.map((d,i) => `<option value="${i}">${d.name}</option>`).join("")}</select></div>
+    <div class="row"><button class="btn primary" id="cCheck">Check my answers</button></div>
+    <div id="cFb" class="fb" hidden></div></div>`;
+  function draw(){ const series = D.filter((d,i) => on[i]).map(d => ({name:d.name, cls:d.cls, pts:T.map((t,j) => [t, d.v[j]])}));
+    $("#cChart", el).innerHTML = lineChart({xMin:0,xMax:30,xStep:5,yMin:30,yMax:80,yStep:10,xLabel:"Time (minutes)",yLabel:"Temperature (°C)",series,aria:"Temperature of four cups over 30 minutes"}).svg; }
+  $("#cTog", el).addEventListener("change", e => { const i = +e.target.id.replace("cup",""); on[i] = e.target.checked; draw(); });
+  $("#cCheck", el).addEventListener("click", () => {
+    const a1 = parseNum($("#cq1", el).value), a2 = parseNum($("#cq2", el).value), a3 = $("#cq3", el).value;
+    const r = [near(a1,14), near(a2,46), a3 === "3"];
+    const msgs = [r[0] ? "1 ✓ 80 − 66 = 14" : "1 ✗ subtract the last reading from the first", r[1] ? "2 ✓ 80 − 34 = 46" : "2 ✗ try 80 minus the metal cup's last reading", r[2] ? "3 ✓ foam lost the least heat" : "3 ✗ which line is the flattest?"];
+    feedback($("#cFb", el), r.every(Boolean), msgs.join("<br>") + (r.every(Boolean) ? "<br>The metal cup is the best <b>conductor</b>; heat left it fastest." : ""));
+    if(r.every(Boolean)) mark(objId, "lab");
+  });
+  draw();
+}};
+
+/* Forces lab: PS.5.2.1 */
+LABS.forces = {title:"Push Test: friction & mass", tag:"Fair-test lab · fractions of a meter", mount(el, objId){
+  const surf = [["Ice",0.75],["Smooth tile",1.5],["Carpet",3],["Grass",4]];
+  let s = 1, m = 1, trials = [];
+  el.innerHTML = `<p>Give a cart the <b>same push</b> every time. Change <b>one</b> variable, then compare how far it rolls.</p>
+   <div class="twocol">
+    <div class="panel">
+      <div class="eyebrow">Surface (friction)</div><div class="row" id="fS">${surf.map((x,i) => `<button class="btn" data-i="${i}">${x[0]}</button>`).join("")}</div>
+      <div class="eyebrow">Mass (blocks on the cart)</div><div class="row" id="fM">${[1,2,3].map(n => `<button class="btn" data-m="${n}">${n} block${n>1?"s":""}</button>`).join("")}</div>
+      <div class="row"><button class="btn primary" id="fGo">Push!</button><button class="btn" id="fClear">Clear table</button></div>
+    </div>
+    <div class="panel"><svg viewBox="0 0 420 90" class="chart" id="fTrack" role="img" aria-label="Track from 0 to 8 meters"></svg></div>
+   </div>
+   <div class="tablewrap"><table class="data" id="fTable"><thead><tr><th>Trial</th><th>Surface</th><th>Blocks</th><th>Distance (m)</th></tr></thead><tbody></tbody></table></div>
+   <div class="panel"><div class="eyebrow">Compare</div><p id="fQ" class="muted">Run at least two trials to get a comparison question.</p>
+    <div class="row"><input id="fAns" type="text" placeholder="e.g. 1 ½ or 1.5" aria-label="Your answer in meters"><button class="btn primary" id="fCheck">Check</button></div><div id="fFb" class="fb" hidden></div></div>`;
+  const track = $("#fTrack", el);
+  function drawTrack(d){
+    const sx = x => 20 + x/8*380; let g = `<rect x="20" y="58" width="380" height="8" rx="3" style="fill:var(--line)"/>`;
+    for(let i=0;i<=8;i++) g += `<line x1="${sx(i)}" x2="${sx(i)}" y1="66" y2="72" class="axis"/><text x="${sx(i)}" y="86" text-anchor="middle">${i} m</text>`;
+    const x = sx(d||0);
+    g += `<g id="cart" style="transform:translateX(${x-20}px);transition:transform 1.1s cubic-bezier(.2,.7,.3,1)"><rect x="4" y="${46-m*8}" width="32" height="${m*8}" rx="2" style="fill:var(--sun)"/><rect x="0" y="46" width="40" height="10" rx="3" style="fill:var(--pine)"/><circle cx="9" cy="58" r="4" style="fill:var(--ink)"/><circle cx="31" cy="58" r="4" style="fill:var(--ink)"/></g>`;
+    track.innerHTML = g;
+  }
+  function sel(){ $("#fS", el).querySelectorAll("button").forEach((b,i) => b.classList.toggle("sel", i===s)); $("#fM", el).querySelectorAll("button").forEach(b => b.classList.toggle("sel", +b.dataset.m===m)); drawTrack(0); }
+  let ans = null;
+  function drawTable(){ $("#fTable tbody", el).innerHTML = trials.map((t,i) => `<tr><td>${i+1}</td><td>${t.s}</td><td>${t.m}</td><td>${quarters(t.d)}</td></tr>`).join("");
+    if(trials.length >= 2){ const a = trials[trials.length-1], b = trials[trials.length-2]; ans = Math.abs(a.d-b.d);
+      $("#fQ", el).classList.remove("muted"); $("#fQ", el).innerHTML = `Trial ${trials.length-1}: ${quarters(b.d)} m. Trial ${trials.length}: ${quarters(a.d)} m. What is the difference in meters?`; } }
+  $("#fS", el).addEventListener("click", e => { const b = e.target.closest("button"); if(b){ s = +b.dataset.i; sel(); } });
+  $("#fM", el).addEventListener("click", e => { const b = e.target.closest("button"); if(b){ m = +b.dataset.m; sel(); } });
+  $("#fGo", el).addEventListener("click", () => {
+    const d = Math.round(6/(m*surf[s][1])*4)/4; drawTrack(0);
+    requestAnimationFrame(() => requestAnimationFrame(() => { const c = $("#cart", track); if(c) c.style.transform = `translateX(${20 + d/8*380 - 20}px)`; }));
+    trials.push({s:surf[s][0], m, d}); drawTable(); mark(objId, "lab");
+  });
+  $("#fClear", el).addEventListener("click", () => { trials = []; ans = null; drawTable(); $("#fQ", el).classList.add("muted"); $("#fQ", el).textContent = "Run at least two trials to get a comparison question."; $("#fFb", el).hidden = true; });
+  $("#fCheck", el).addEventListener("click", () => { if(ans === null) return; const v = parseNum($("#fAns", el).value.replace("½"," 1/2").replace("¼"," 1/4").replace("¾"," 3/4").trim());
+    const ok = near(v, ans, 0.01); feedback($("#fFb", el), ok, ok ? `Yes, ${quarters(ans)} m. ${ans>0 ? "Which variable caused the difference?" : "Same distance: did you change a variable?"}` : "Try again. Subtract the smaller distance from the larger one. Fractions like 1 1/2 or decimals like 1.5 both work."); });
+  sel();
+}};
+
+/* Motion lab: PS.5.2.2 */
+LABS.motion = {title:"Distance–Time Graph Lab", tag:"Graphing lab · coordinate plane", mount(el, objId){
+  const A = [0,2,4,4,6,8,10], B = [0,3,6,9,9,9,12];
+  let plotted = [], step = 0;
+  el.innerHTML = `<p>A toy car rolled down the hallway. Plot each row of the table as an ordered pair <span class="mono">(time, distance)</span>. Tap the graph at the right height for the highlighted time.</p>
+   <div class="twocol">
+     <div class="panel chartwrap" id="gWrap"></div>
+     <div class="panel">
+       <table class="data" id="gTab"><thead><tr><th>Time (s)</th><th>Car A distance (m)</th></tr></thead><tbody>${A.map((d,i) => `<tr data-r="${i}"><td>${i}</td><td>${d}</td></tr>`).join("")}</tbody></table>
+       <div id="gFb" class="fb info">Plot the point for time 0.</div>
+       <div class="row"><button class="btn" id="gReset">Start over</button><button class="btn" id="gShowB" disabled>Add Car B</button></div>
+     </div>
+   </div>
+   <div class="panel" id="gQs" hidden><div class="eyebrow">Read the graph</div>
+     <div class="row"><label for="gq1">1. Car A was stopped between which seconds?</label><select id="gq1"><option value="">Choose…</option><option>0 and 1</option><option>2 and 3</option><option>4 and 5</option></select></div>
+     <div class="row"><label for="gq2">2. Which car went farther in the first 2 seconds?</label><select id="gq2"><option value="">Choose…</option><option>Car A</option><option>Car B</option></select></div>
+     <div class="row"><label for="gq3">3. For how many seconds was Car B stopped?</label><input id="gq3" type="text" inputmode="numeric"></div>
+     <div class="row"><button class="btn primary" id="gCheck">Check</button></div><div id="gFb2" class="fb" hidden></div></div>`;
+  let showB = false;
+  function draw(){
+    const series = [{name:"Car A", cls:"s1", pts:plotted.map((d,i) => [i,d])}];
+    if(showB) series.push({name:"Car B", cls:"s2", pts:B.map((d,i) => [i,d])});
+    const c = lineChart({xMin:0,xMax:6,xStep:1,yMin:0,yMax:12,yStep:2,xLabel:"Time (seconds)",yLabel:"Distance (meters)",series,aria:"Distance-time graph"});
+    let svg = c.svg;
+    if(step < A.length){ const x = c.sx(step); svg = svg.replace("</svg>", `<rect x="${x-10}" y="${c.T}" width="20" height="${c.H-c.T-c.B}" rx="4" style="fill:var(--sun);opacity:.22"/></svg>`); }
+    $("#gWrap", el).innerHTML = svg + (showB ? legend(series) : "");
+    const s = $("svg", $("#gWrap", el)); s.style.cursor = step < A.length ? "crosshair" : "default";
+    s.addEventListener("click", ev => {
+      if(step >= A.length) return;
+      const pt = s.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(s.getScreenCTM().inverse());
+      const y = Math.max(0, Math.min(12, Math.round((c.H - c.B - p.y) / (c.H - c.T - c.B) * 12)));
+      if(y === A[step]){ plotted.push(y); step++;
+        feedback($("#gFb", el), true, step < A.length ? `(${step-1}, ${y}) plotted. Now time ${step}.` : "All points plotted! Notice the flat part of the line.");
+        if(step === A.length){ $("#gShowB", el).disabled = false; $("#gQs", el).hidden = false; mark(objId, "lab"); }
+      } else feedback($("#gFb", el), false, `You tapped ${y} m. The table says ${A[step]} m at ${step} s. Try again.`);
+      highlight(); draw();
+    });
+  }
+  function highlight(){ el.querySelectorAll("#gTab tr[data-r]").forEach(tr => tr.style.background = +tr.dataset.r === step ? "var(--sun-soft)" : ""); }
+  $("#gReset", el).addEventListener("click", () => { plotted = []; step = 0; showB = false; $("#gShowB", el).disabled = true; $("#gQs", el).hidden = true; feedback($("#gFb", el), null, "Plot the point for time 0."); highlight(); draw(); });
+  $("#gShowB", el).addEventListener("click", () => { showB = true;
+    $("#gTab", el).innerHTML = `<thead><tr><th>Time (s)</th><th>Car A (m)</th><th>Car B (m)</th></tr></thead><tbody>${A.map((d,i) => `<tr data-r="${i}"><td>${i}</td><td>${d}</td><td>${B[i]}</td></tr>`).join("")}</tbody>`; draw(); });
+  $("#gCheck", el).addEventListener("click", () => {
+    const r = [$("#gq1", el).value === "2 and 3", $("#gq2", el).value === "Car B", near(parseNum($("#gq3", el).value), 2)];
+    feedback($("#gFb2", el), r.every(Boolean), [r[0]?"1 ✓ flat from 2 s to 3 s":"1 ✗ look for the flat segment of Car A", r[1]?"2 ✓ Car B was at 6 m, Car A at 4 m":"2 ✗ compare both lines at time 2", r[2]?"3 ✓ from 3 s to 5 s, 2 seconds":"3 ✗ Car B's line is flat from 3 s to …?"].join("<br>"));
+  });
+  highlight(); draw();
+}};
+
+/* Populations: LS.5.2.3 */
+LABS.populations = {title:"Population Patterns", tag:"Pattern lab · two numerical patterns", mount(el, objId){
+  const G = w => 40 + 20*w, S = w => 4 + 2*w;
+  el.innerHTML = `<p>In a meadow model, grasshoppers <b>start at 40 and add 20 each week</b>. Snakes that eat them <b>start at 4 and add 2 each week</b>. Fill in the missing numbers.</p>
+   <div class="tablewrap"><table class="data"><thead><tr><th>Week</th>${[0,1,2,3,4,5].map(w => `<th>${w}</th>`).join("")}</tr></thead><tbody>
+    <tr><td>Grasshoppers</td>${[0,1,2,3,4,5].map(w => w<2 ? `<td>${G(w)}</td>` : `<td><input id="pg${w}" type="text" inputmode="numeric" style="width:4.5em" aria-label="Grasshoppers week ${w}"></td>`).join("")}</tr>
+    <tr><td>Snakes</td>${[0,1,2,3,4,5].map(w => w<2 ? `<td>${S(w)}</td>` : `<td><input id="ps${w}" type="text" inputmode="numeric" style="width:4.5em" aria-label="Snakes week ${w}"></td>`).join("")}</tr></tbody></table></div>
+   <div class="row"><button class="btn primary" id="pCheck">Check & graph</button></div><div id="pFb" class="fb" hidden></div>
+   <div class="panel chartwrap" id="pChart" hidden></div>
+   <div class="panel" id="pQ" hidden><label for="pRel">What do you notice? The grasshopper number is always ___ times the snake number.</label><div class="row"><input id="pRel" type="text" inputmode="numeric"><button class="btn primary" id="pRelC">Check</button></div><div id="pFb2" class="fb" hidden></div></div>`;
+  $("#pCheck", el).addEventListener("click", () => {
+    let bad = 0;
+    for(let w=2; w<=5; w++){ ["g","s"].forEach(k => { const inp = $(`#p${k}${w}`, el), v = parseNum(inp.value), ok = v === (k==="g"?G(w):S(w)); inp.style.borderColor = ok ? "var(--good)" : "var(--bad)"; if(!ok) bad++; }); }
+    if(bad){ feedback($("#pFb", el), false, `${bad} cell${bad>1?"s":""} to fix. Keep adding the same amount each week.`); return; }
+    feedback($("#pFb", el), true, "Table complete! Here are the ordered pairs (snakes, grasshoppers) on the coordinate plane.");
+    const pts = [0,1,2,3,4,5].map(w => [S(w), G(w)]);
+    $("#pChart", el).hidden = false;
+    $("#pChart", el).innerHTML = lineChart({xMin:0,xMax:16,xStep:2,yMin:0,yMax:160,yStep:20,xLabel:"Snakes",yLabel:"Grasshoppers",series:[{name:"(snakes, grasshoppers)",cls:"s3",pts}],aria:"Grasshoppers vs snakes"}).svg;
+    $("#pQ", el).hidden = false; mark(objId, "lab");
+  });
+  $("#pRelC", el).addEventListener("click", () => { const ok = parseNum($("#pRel", el).value) === 10;
+    feedback($("#pFb2", el), ok, ok ? "Yes, 10 times! When grasshoppers increase, snakes have more food and increase too. That's an interconnected relationship." : "Try dividing: 40 ÷ 4, 60 ÷ 6, 80 ÷ 8…"); });
+}};
+
+/* Weather lab: ESS.5.1.1 */
+LABS.weather = {title:"NC Weather Data Lab", tag:"Data lab · graphing & subtraction", mount(el, objId){
+  const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const C = [
+    {name:"Asheville (mountains)", cls:"s4", v:[48,52,59,68,75,81,84,83,77,68,58,50]},
+    {name:"Raleigh (piedmont)", cls:"s1", v:[51,55,63,72,79,86,89,87,81,72,62,53]},
+    {name:"Wilmington (coast)", cls:"s2", v:[57,60,66,74,81,87,90,88,84,76,67,59]}
+  ];
+  el.innerHTML = `<p>Average daily high temperatures (°F) by month for three North Carolina cities. <span class="muted">Rounded practice values based on typical long-term averages; check NOAA for official climate normals.</span></p>
+   <div class="panel chartwrap" id="wChart"></div>
+   <div class="tablewrap"><table class="data"><thead><tr><th>City</th>${M.map(m => `<th>${m}</th>`).join("")}</tr></thead><tbody>${C.map(c => `<tr><td>${c.name}</td>${c.v.map(x => `<td>${x}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+   <div class="panel"><div class="eyebrow">Analyze the data</div>
+     <div class="row"><label for="wq1">1. Raleigh's warmest month minus its coldest month = ___ °F</label><input id="wq1" type="text" inputmode="numeric"></div>
+     <div class="row"><label for="wq2">2. Warmest city in January:</label><select id="wq2"><option value="">Choose…</option>${C.map((c,i) => `<option value="${i}">${c.name}</option>`).join("")}</select></div>
+     <div class="row"><label for="wq3">3. How much warmer is Wilmington than Asheville in January? ___ °F</label><input id="wq3" type="text" inputmode="numeric"></div>
+     <div class="row"><label for="wq4">4. This graph shows…</label><select id="wq4"><option value="">Choose…</option><option value="w">weather on one day</option><option value="c">climate (long-term pattern)</option></select></div>
+     <div class="row"><button class="btn primary" id="wCheck">Check</button></div><div id="wFb" class="fb" hidden></div></div>`;
+  $("#wChart", el).innerHTML = lineChart({xMin:0,xMax:11,xStep:1,yMin:40,yMax:95,yStep:5,xFmt:i => M[i],xLabel:"Month",yLabel:"Average high (°F)",series:C.map(c => ({name:c.name,cls:c.cls,pts:c.v.map((v,i) => [i,v])})),aria:"Average monthly high temperatures"}).svg + legend(C);
+  $("#wCheck", el).addEventListener("click", () => {
+    const r = [near(parseNum($("#wq1", el).value),38), $("#wq2", el).value === "2", near(parseNum($("#wq3", el).value),9), $("#wq4", el).value === "c"];
+    feedback($("#wFb", el), r.every(Boolean), [r[0]?"1 ✓ 89 − 51 = 38":"1 ✗ find July and January for Raleigh", r[1]?"2 ✓ Wilmington, near the warm ocean":"2 ✗ which line is highest at Jan?", r[2]?"3 ✓ 57 − 48 = 9":"3 ✗ subtract Asheville's January from Wilmington's", r[3]?"4 ✓ averages over many years = climate":"4 ✗ these are long-term averages"].join("<br>"));
+    if(r.every(Boolean)) mark(objId, "lab");
+  });
+}};
+
+/* Pressure lab: ESS.5.1.2 */
+LABS.pressure = {title:"Barometer Forecast Lab", tag:"Data lab · comparing & subtracting decimals", mount(el, objId){
+  const D = ["Mon","Tue","Wed","Thu","Fri"], P = [30.21,30.08,29.90,29.58,29.95];
+  el.innerHTML = `<p>A class in Raleigh read the barometer at 8 a.m. each day (inches of mercury). <span class="muted">(Example class data.)</span></p>
+   <div class="panel chartwrap" id="bChart"></div>
+   <div class="tablewrap"><table class="data"><thead><tr><th>Day</th>${D.map(d => `<th>${d}</th>`).join("")}</tr></thead><tbody><tr><td>Pressure (in.)</td>${P.map(p => `<td>${p.toFixed(2)}</td>`).join("")}</tr></tbody></table></div>
+   <div class="panel"><div class="eyebrow">Forecast from the data</div>
+     <div class="row"><label for="bq1">1. How much did pressure drop from Monday to Thursday? ___ in.</label><input id="bq1" type="text" inputmode="decimal"></div>
+     <div class="row"><label for="bq2">2. Between which two days did it fall the most?</label><select id="bq2"><option value="">Choose…</option><option>Mon–Tue</option><option>Tue–Wed</option><option>Wed–Thu</option></select></div>
+     <div class="row"><label for="bq3">3. Thursday's weather was most likely…</label><select id="bq3"><option value="">Choose…</option><option value="s">clear and sunny</option><option value="r">cloudy, windy, rainy</option></select></div>
+     <div class="row"><label for="bq4">4. Friday the pressure is rising. Expect…</label><select id="bq4"><option value="">Choose…</option><option value="c">clearing skies</option><option value="h">a hurricane</option></select></div>
+     <div class="row"><button class="btn primary" id="bCheck">Check</button></div><div id="bFb" class="fb" hidden></div></div>`;
+  $("#bChart", el).innerHTML = lineChart({xMin:0,xMax:4,xStep:1,yMin:29.4,yMax:30.4,yStep:0.2,xFmt:i => D[i],yFmt:y => y.toFixed(1),xLabel:"Day",yLabel:"Pressure (in.)",series:[{name:"Pressure",cls:"s1",pts:P.map((p,i) => [i,p])}],aria:"Barometric pressure over five days"}).svg;
+  $("#bCheck", el).addEventListener("click", () => {
+    const r = [near(parseNum($("#bq1", el).value),0.63,0.001), $("#bq2", el).value === "Wed–Thu", $("#bq3", el).value === "r", $("#bq4", el).value === "c"];
+    feedback($("#bFb", el), r.every(Boolean), [r[0]?"1 ✓ 30.21 − 29.58 = 0.63":"1 ✗ line up the decimal points: 30.21 − 29.58", r[1]?"2 ✓ 29.90 − 29.58 = 0.32, the biggest drop":"2 ✗ subtract each pair of days and compare", r[2]?"3 ✓ low pressure = unsettled weather":"3 ✗ what does low pressure bring?", r[3]?"4 ✓ rising pressure = high pressure moving in":"4 ✗ rising pressure usually means improving weather"].join("<br>"));
+    if(r.every(Boolean)) mark(objId, "lab");
+  });
+}};
+
+/* Sea breeze: ESS.5.1.3 */
+LABS.breeze = {title:"Sea Breeze / Land Breeze Model", tag:"Model", mount(el, objId){
+  let day = true;
+  el.innerHTML = `<div class="row"><button class="btn sel" id="bzD">Daytime</button><button class="btn" id="bzN">Nighttime</button></div><div class="panel"><svg viewBox="0 0 520 220" class="chart" id="bzSvg" role="img"></svg><p id="bzTxt"></p></div>
+   <div class="panel"><label for="bzQ">At 2 p.m. on Wrightsville Beach, a kite flies toward the dunes. Which breeze is it?</label><div class="row"><select id="bzQ"><option value="">Choose…</option><option value="s">Sea breeze</option><option value="l">Land breeze</option></select><button class="btn primary" id="bzC">Check</button></div><div id="bzFb" class="fb" hidden></div></div>`;
+  function draw(){
+    const landT = day ? "warmer" : "cooler", seaT = day ? "cooler" : "warmer";
+    const dir = day ? -1 : 1; // surface wind: day blows sea(right)→land(left)
+    const arrow = (x1,y1,x2,y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:var(--sky);stroke-width:4;stroke-linecap:round" marker-end="url(#ah)"/>`;
+    let g = `<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--sky)"/></marker></defs>`;
+    g += `<rect x="0" y="0" width="520" height="220" style="fill:${day?'var(--sky-soft)':'var(--grid)'}"/>`;
+    g += `<circle cx="${day?60:470}" cy="34" r="18" style="fill:${day?'var(--sun)':'var(--ink-2)'}"/>`;
+    g += `<rect x="0" y="170" width="260" height="50" style="fill:var(--sun-soft)"/><rect x="260" y="176" width="260" height="44" style="fill:var(--s1);opacity:.55"/>`;
+    g += `<text x="130" y="200" text-anchor="middle">LAND · ${landT}</text><text x="390" y="204" text-anchor="middle">OCEAN · ${seaT}</text>`;
+    if(day){ g += arrow(400,150,180,150) + arrow(130,150,130,70) + arrow(160,60,380,60) + arrow(400,70,400,140); g += `<text x="290" y="142" text-anchor="middle">sea breeze</text><text x="100" y="110" text-anchor="end">warm air rises</text>`; }
+    else { g += arrow(130,150,370,150) + arrow(400,150,400,70) + arrow(370,60,150,60) + arrow(130,70,130,140); g += `<text x="250" y="142" text-anchor="middle">land breeze</text><text x="420" y="110">warm air rises</text>`; }
+    $("#bzSvg", el).innerHTML = g;
+    $("#bzSvg", el).setAttribute("aria-label", day ? "Daytime: land is warmer, air rises over land, cool surface wind blows from sea to land" : "Night: ocean is warmer, air rises over the ocean, surface wind blows from land to sea");
+    $("#bzTxt", el).textContent = day ? "In the day, land heats faster than water. Warm air over land rises, and cooler air from the ocean rushes in to replace it: a sea breeze." : "At night, land cools faster than water. Now the air over the ocean is warmer and rises, so air flows from land out to sea: a land breeze.";
+    $("#bzD", el).classList.toggle("sel", day); $("#bzN", el).classList.toggle("sel", !day);
+  }
+  $("#bzD", el).addEventListener("click", () => { day = true; draw(); });
+  $("#bzN", el).addEventListener("click", () => { day = false; draw(); mark(objId, "lab"); });
+  $("#bzC", el).addEventListener("click", () => { const ok = $("#bzQ", el).value === "s"; feedback($("#bzFb", el), ok, ok ? "Yes! In the afternoon the land is warmer, so the breeze blows from the sea toward land." : "Think: in the afternoon, which is warmer, land or sea? The wind blows toward the warmer side."); if(ok) mark(objId, "lab"); });
+  draw();
+}};
+
+/* Particle model: ESS.5.1.4 */
+LABS.particles = {title:"Particle Model: add or remove the sun's energy", tag:"Model · states of matter", mount(el, objId){
+  el.innerHTML = `<div class="twocol"><div class="panel"><canvas id="pc" width="420" height="260" aria-label="Water particles moving in a container"></canvas></div>
+   <div class="panel"><label for="pt" class="eyebrow">Energy (temperature)</label><input type="range" id="pt" min="-20" max="120" value="20"><div class="mono" id="ptv"></div><p id="pst"></p></div></div>`;
+  const cv = $("#pc", el), ctx = cv.getContext("2d"), N = 36;
+  const css = getComputedStyle(document.documentElement);
+  const ps = Array.from({length:N}, (_,i) => ({hx: 150 + (i%6)*24, hy: 120 + Math.floor(i/6)*22, x:0, y:0, vx:0, vy:0}));
+  ps.forEach(p => { p.x = p.hx; p.y = p.hy; });
+  let T = 20, raf, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function state(){ return T < 0 ? "solid" : T < 100 ? "liquid" : "gas"; }
+  function label(){ $("#ptv", el).textContent = `${T} °C · ${state()}`;
+    $("#pst", el).textContent = state()==="solid" ? "Ice: particles are packed close and only vibrate in place." : state()==="liquid" ? "Liquid water: particles move faster and slide past each other. Add more energy and some escape as vapor (evaporation)." : "Water vapor: particles move fast and spread far apart. It's an invisible gas. Remove energy and they condense back into droplets."; }
+  function step(){
+    if(!cv.isConnected) return;
+    const st = state(), sp = st==="solid" ? 0.6 : st==="liquid" ? 1.6 + T/50 : 3 + (T-100)/15;
+    ctx.fillStyle = css.getPropertyValue("--card").trim() || "#fff"; ctx.fillRect(0,0,420,260);
+    ctx.strokeStyle = css.getPropertyValue("--ink-2").trim() || "#555"; ctx.lineWidth = 2; ctx.strokeRect(1,1,418,258);
+    ps.forEach(p => {
+      if(st === "solid"){ p.x = p.hx + (Math.random()-.5)*2*sp; p.y = p.hy + (Math.random()-.5)*2*sp; p.vx = (Math.random()-.5)*2; p.vy = (Math.random()-.5)*2; }
+      else {
+        const k = Math.hypot(p.vx,p.vy) || 1; p.vx = p.vx/k*sp + (Math.random()-.5)*.4; p.vy = p.vy/k*sp + (Math.random()-.5)*.4;
+        if(st === "liquid") p.vy += 0.35;
+        p.x += p.vx; p.y += p.vy;
+        const top = st === "liquid" ? 150 : 10;
+        if(p.x < 10){ p.x = 10; p.vx = Math.abs(p.vx); } if(p.x > 410){ p.x = 410; p.vx = -Math.abs(p.vx); }
+        if(p.y < top){ p.y = top; p.vy = Math.abs(p.vy); } if(p.y > 250){ p.y = 250; p.vy = -Math.abs(p.vy); }
+      }
+      ctx.beginPath(); ctx.arc(p.x,p.y,7,0,Math.PI*2); ctx.fillStyle = css.getPropertyValue("--s1").trim() || "#2f7fb8"; ctx.fill();
+    });
+    if(!reduce) raf = requestAnimationFrame(step);
+  }
+  $("#pt", el).addEventListener("input", e => { T = +e.target.value; label(); if(T >= 100 || T < 0) mark(objId, "lab"); if(reduce) step(); });
+  label(); step();
+  const stop = () => cancelAnimationFrame(raf); window.addEventListener("hashchange", stop, {once:true});
+}};
+
+/* ---------- views ---------- */
+function setNav(which){ ["home","teacher"].forEach(n => { const a = $("#nav" + n[0].toUpperCase() + n.slice(1)); if(n === which) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); }); }
+
+function renderHome(){
+  setNav("home");
+  app.innerHTML = `<div class="stack">
+   <div class="hero"><span class="eyebrow">North Carolina · 2023 Science Standards · Grade 5</span>
+    <h1>What happens when you weigh, push, breathe, eat, and forecast?</h1>
+    <p>Pick an objective. Each one has a big idea, readings with a purpose, a hands-on lab, science words, sentence starters for talking like a scientist, and a quick check. Objectives marked <span class="mathtag">MATH</span> connect to your Eureka Math² lessons.</p>
+    <div class="legend"><span>Earn 3 stars per objective:</span><span><span class="stars"><span class="on">★</span></span> open a reading</span><span><span class="stars"><span class="on">★</span></span> finish the lab</span><span><span class="stars"><span class="on">★</span></span> score 2 of 3 on the check</span></div>
+   </div>
+   <div class="strands">${STRANDS.map(s => `<article class="strand"><header><span class="code">${s.code}</span><h2>${h(s.name)}</h2><p class="muted" style="font-size:.92rem">${h(s.std)}</p></header>
+     <ul class="objlist">${OBJ.filter(o => o.strand===s.id).map(o => `<li><a class="objlink" href="#${o.id}"><span class="id">${o.id}</span><span class="t">${h(o.ican.replace(/^I can /,"").replace(/^./, c => c.toUpperCase()))}${o.math?'<span class="mathtag">MATH</span>':''}</span>${starHTML(o.id)}</a></li>`).join("")}</ul></article>`).join("")}</div>
+  </div>`;
+}
+
+function renderObjective(id){
+  setNav("");
+  const o = OBJ_BY_ID[id], s = STRANDS.find(x => x.id === o.strand);
+  const sibs = OBJ.filter(x => x.strand === o.strand), idx = sibs.indexOf(o);
+  app.innerHTML = `<div class="stack">
+   <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">All strands</a><span class="muted">/</span><span>${s.code} ${h(s.name)}</span></nav>
+   <div class="objhead"><span class="eyebrow">${o.id} · ${h(o.sep)}</span>
+     <h1 class="objtitle">${h(o.big.split(". ")[0])}.</h1>
+     <p class="official"><b>NC objective:</b> ${h(o.official)}</p>
+     <div class="ican"><b>I can</b> ${h(o.ican.replace(/^I can /,""))}</div>
+     <div class="row">${starHTML(o.id)}</div>
+     <nav class="secnav" aria-label="On this page"><a href="#" data-jump="learn">Big idea</a><a href="#" data-jump="read">Read</a>${o.math?'<a href="#" data-jump="math">Math connection</a>':''}<a href="#" data-jump="lab">Lab</a><a href="#" data-jump="words">Words</a><a href="#" data-jump="talk">Talk</a><a href="#" data-jump="check">Check</a></nav>
+   </div>
+
+   <section class="block" id="sec-learn"><header><h2>Big idea</h2></header>
+     <div class="twocol"><div class="prose"><p style="font-size:1.08rem">${h(o.big)}</p></div>
+     <div class="panel"><div class="eyebrow">Key ideas</div><ul class="keys">${o.keys.map(k => `<li>${h(k)}</li>`).join("")}</ul></div></div></section>
+
+   <section class="block" id="sec-read"><header><h2>Read & explore</h2><span class="muted">Read with a purpose, then write your answer in your science notebook.</span></header>
+     <div class="reads">${o.reads.map((r,i) => `<article class="read"><span class="kind">${h(r.kind)}</span><h3><a href="${r.url}" target="_blank" rel="noopener" data-read="${i}">${h(r.title)} ↗</a></h3><span class="src">${h(r.src)}</span><div class="find">${h(r.find)}</div><p class="purpose"><b>Read for:</b> ${h(r.purpose)}</p></article>`).join("")}</div></section>
+
+   ${o.math ? `<section class="block" id="sec-math"><header><h2>Math connection</h2><span class="muted">Eureka Math² · <a href="${EM_URL}" target="_blank" rel="noopener">Great Minds ↗</a></span></header>
+     <div class="math"><p>${h(o.math.why)}</p>
+       <ul class="mods">${o.math.mods.map(m => `<li><span class="badge">${m}</span><span>${h(EM[m].split(" · ")[1])}</span></li>`).join("")}</ul>
+       <div class="nc">${o.math.nc.map(h).join("<br>")}</div>
+       <div class="example"><span class="eyebrow">Worked example</span><p>${o.math.example}</p></div></div></section>` : ""}
+
+   <section class="block" id="sec-lab"><header><h2>Lab</h2></header>
+     ${o.labs.map((l,i) => `<div class="lab" id="lab-${i}"><header><span class="tag">${h(LABS[l].tag)}</span><h3>${h(LABS[l].title)}</h3></header><div class="labbody" style="display:grid;gap:14px"></div></div>`).join("")}</section>
+
+   <section class="block" id="sec-words"><header><h2>Science words</h2><span class="muted">Tap a word to see what it means.</span></header>
+     <div class="words">${o.words.map((w,i) => `<button class="word" aria-pressed="false" id="w${i}"><b>${h(w[0])}</b><span hidden>${h(w[1])}</span></button>`).join("")}</div></section>
+
+   <section class="block" id="sec-talk"><header><h2>Talk like a scientist</h2><span class="muted">Use these with a partner or in your notebook.</span></header>
+     <ul class="stems">${o.stems.map(t => `<li>${h(t).replace(/___/g,'<span class="blank"></span>')}</li>`).join("")}</ul></section>
+
+   <section class="block" id="sec-check"><header><h2>Quick check</h2></header><div class="quiz" id="quiz"></div><div id="qScore" class="fb" hidden></div></section>
+
+   <nav class="row" aria-label="Objective navigation" style="justify-content:space-between">
+     ${idx>0 ? `<a class="btn" href="#${sibs[idx-1].id}">← ${sibs[idx-1].id}</a>` : `<span></span>`}
+     ${idx<sibs.length-1 ? `<a class="btn primary" href="#${sibs[idx+1].id}">Next: ${sibs[idx+1].id} →</a>` : `<a class="btn primary" href="#home">Back to all strands</a>`}
+   </nav>
+  </div>`;
+  o.labs.forEach((l,i) => LABS[l].mount($(`#lab-${i} .labbody`), o.id));
+  app.querySelectorAll("[data-read]").forEach(a => a.addEventListener("click", () => mark(o.id, "read")));
+  app.querySelectorAll(".word").forEach(b => b.addEventListener("click", () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); b.querySelector("span").hidden = !on; }));
+  app.querySelectorAll("[data-jump]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); $("#sec-"+a.dataset.jump).scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }));
+  // quiz
+  const answered = {};
+  $("#quiz").innerHTML = o.quiz.map((q,i) => `<div class="q" data-q="${i}"><p><b>${i+1}.</b> ${h(q.q)}</p><div class="opts">${q.o.map((t,j) => `<button class="opt" data-j="${j}">${h(t)}</button>`).join("")}</div><div class="fb" hidden></div></div>`).join("");
+  $("#quiz").addEventListener("click", e => {
+    const b = e.target.closest(".opt"); if(!b) return;
+    const qd = b.closest(".q"), i = +qd.dataset.q; if(i in answered) return;
+    const q = o.quiz[i], ok = +b.dataset.j === q.a; answered[i] = ok;
+    b.classList.add(ok ? "ok" : "no"); if(!ok) qd.querySelectorAll(".opt")[q.a].classList.add("ok");
+    feedback(qd.querySelector(".fb"), ok, (ok ? "Correct. " : "The answer is highlighted. ") + h(q.why));
+    if(Object.keys(answered).length === o.quiz.length){ const n = Object.values(answered).filter(Boolean).length;
+      feedback($("#qScore"), n >= 2, `You got ${n} of ${o.quiz.length}. ${n >= 2 ? "Star earned!" : "Reread the big idea and try again."} <button class="btn" id="qRetry" style="margin-left:8px">Try again</button>`);
+      if(n >= 2) mark(o.id, "quiz");
+      $("#qRetry").addEventListener("click", () => renderObjectiveQuizReset(o));
+    }
+  });
+  window.scrollTo(0,0);
+}
+function renderObjectiveQuizReset(o){ const y = $("#sec-check").offsetTop; renderObjective(o.id); window.scrollTo(0, y); }
+
+function renderTeacher(){
+  setNav("teacher");
+  app.innerHTML = `<div class="stack">
+   <div class="hero"><span class="eyebrow">Teacher guide</span><h1>Alignment at a glance</h1>
+    <p>Every objective in this app comes from the NC DPI <i>Grade 5 Science 2023 Support Document</i> (August 2025): its proficiency statements, academic-language stems, and words for student discourse. Math connections point to Eureka Math² Grade 5 modules and the NC math standards they share.</p></div>
+   <div class="note"><b>How students use it</b><p>Each objective page follows the same path: big idea → read with a purpose → lab → words → sentence stems → 3-question check. Stars save in the student's own browser only, so treat them as motivation, not a grade record. Use the stems for turn-and-talk and notebook entries.</p></div>
+   <div class="note"><b>About the reading links</b><p>Links go to free, well-established sources (PhET, KidsHealth, NASA Climate Kids, NOAA SciJinks, NWS, National Hurricane Center, NCpedia, NC Aquariums, Wonderopolis, Science News Explores, PBS LearningMedia, National Geographic Kids). Most open to a home or section page with a search phrase, so they keep working when articles move. Books are trade titles to request from your media center. Preview every link before assigning it to students.</p></div>
+   <div class="note"><b>About the Eureka Math² connections</b><p>Module titles follow Eureka Math² Grade 5: ${Object.values(EM).map(h).join("; ")}. Use your district's Great Minds materials to pick the exact lesson. The strongest pairings are PS.5.1.1 with Module 4 (decimal operations) and metric conversion, PS.5.2.2 with Module 6 (coordinate plane), and LS.5.2.3 with Module 6 (two numerical patterns).</p></div>
+   <div class="chartwrap"><table class="tt"><thead><tr><th>Objective</th><th>Practice (SEP)</th><th>Crosscutting concept</th><th>Lab</th><th>Eureka Math²</th><th>NC math</th></tr></thead><tbody>
+    ${OBJ.map(o => `<tr><td><a href="#${o.id}">${o.id}</a></td><td>${h(o.sep)}</td><td>${h(o.ccc)}</td><td>${o.labs.map(l => h(LABS[l].title)).join("<br>")}</td><td>${o.math ? o.math.mods.join(", ") : "<span class='muted'>—</span>"}</td><td>${o.math ? o.math.nc.map(n => h(n.split(" ")[0])).join("<br>") : "<span class='muted'>—</span>"}</td></tr>`).join("")}
+   </tbody></table></div>
+   <div class="row"><button class="btn" id="resetAll">Reset stars on this device</button><span id="resetMsg" class="muted"></span></div>
+  </div>`;
+  let armed = false;
+  $("#resetAll").addEventListener("click", e => {
+    if(!armed){ armed = true; e.target.textContent = "Tap again to confirm reset"; return; }
+    progress = {}; save(); updateStarTotal(); e.target.textContent = "Reset stars on this device"; armed = false; $("#resetMsg").textContent = "Stars cleared.";
+  });
+  window.scrollTo(0,0);
+}
+
+function route(){
+  const hsh = decodeURIComponent(location.hash.slice(1));
+  if(OBJ_BY_ID[hsh]) renderObjective(hsh);
+  else if(hsh === "teacher") renderTeacher();
+  else renderHome();
+}
+window.addEventListener("hashchange", route);
+updateStarTotal(); route();
+</script>
+</body>
+</html>
