@@ -32,6 +32,8 @@
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.embedded .top{display:none}
+.embedded main{padding-block:12px 32px}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
 a{color:var(--sky)}
 :focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:4px}
@@ -1140,8 +1142,12 @@ function renderTeacher(){
   window.scrollTo(0,0);
 }
 
+/* Embed mode for LMS iframes (Canvas etc.): add ~embed to the link, e.g. index.html#PS.5.1.1~embed */
+let embedded = false;
 function route(){
-  const hsh = decodeURIComponent(location.hash.slice(1));
+  let hsh = decodeURIComponent(location.hash.slice(1));
+  if(hsh.endsWith("~embed")){ embedded = true; hsh = hsh.slice(0, -6); }
+  document.documentElement.classList.toggle("embedded", embedded);
   if(OBJ_BY_ID[hsh]) renderObjective(hsh);
   else if(hsh === "teacher") renderTeacher();
   else renderHome();
